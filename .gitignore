@@ -1,3 +1,14 @@
+assets/dist/
+db.sqlite3
+node_modules/
+package-lock.json
+webpack-stats.json
+
+.module-cache
+.sass-cache
+.tmp
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
