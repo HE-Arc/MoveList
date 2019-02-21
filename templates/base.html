@@ -1,3 +1,4 @@
+{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -12,7 +13,6 @@
       this is a nav
     </nav>
     {% block content %}{% endblock %}
-
 
     {% render_bundle 'main' 'js' %}
   </body>
