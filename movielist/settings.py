@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'webpack_loader',
     'rest_framework',
     'movielistapp',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -133,7 +134,7 @@ DATABASES = {
         'NAME': 'movielist',
         'USER': 'movielist',
         'PASSWORD': '1234',
-        'HOST': 'localhost', 
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
