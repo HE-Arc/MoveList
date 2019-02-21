@@ -2,6 +2,7 @@ Django==2.1.7
 django-appconf==1.0.2
 django-webpack-loader==0.6.0
 djangorestframework==3.9.1
+mysqlclient==1.4.2.post1
 pytz==2018.9
 rcssmin==1.0.6
 rjsmin==1.0.12
