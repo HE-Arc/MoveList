@@ -1,0 +1,10 @@
+/*.is-divider::after {
+  background-color: whitesmoke !important;
+}*/
+@charset "utf-8";
+
+@import "node_modules/bulma/bulma.sass";
+@import "node_modules/bulma-extensions/bulma-divider/dist/css/bulma-divider.sass";
+
+$divider-background-color: hsl(217, 71%, 53%);
+$divider-color: hsl(217, 71%, 53%);

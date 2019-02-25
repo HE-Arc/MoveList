@@ -1,20 +1,6 @@
-{% load render_bundle from webpack_loader %}
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
-
-    {% render_bundle 'main' 'css' %}
-  </head>
-
-  <body>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-5">
-      this is a nav
-    </nav>
-
-    this is a content
-
-    {% render_bundle 'main' 'js' %}
-  </body>
-</html>
+{% extends 'base.html' %}
+  {% block content %}
+  {% include "main/search.html" %}
+  {% include "main/filter.html" %}
+  {% include "main/list.html" %}
+{% endblock %}
