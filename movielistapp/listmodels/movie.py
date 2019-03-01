@@ -10,13 +10,16 @@ class Movie(models.Model):
     released=models.DateTimeField(auto_now_add=True)
     runtime=models.IntegerField()
     poster_link=models.CharField(max_length=200)
-    note=models.CharField(max_length=200)
+    note=models.CharField(max_length=200, null=True)
     plot=models.CharField(max_length=200)
-    awards=models.CharField(max_length=200)
-    dvd=models.DateTimeField()
+    awards=models.CharField(max_length=200, null=True)
+    dvd=models.DateField(null=True)
     director=models.ForeignKey(Person, on_delete=models.CASCADE, related_name='director')
-    scenarist=models.ForeignKey(Person, on_delete=models.CASCADE, related_name='scenarist')
+    scenarist=models.ForeignKey(Person, on_delete=models.CASCADE, related_name='scenarist', null=True)
     actors=models.ManyToManyField(Person, related_name='actors')
     country=models.ForeignKey(Country, on_delete=models.CASCADE)
     type=models.ForeignKey(Type, on_delete=models.CASCADE)
     genres=models.ManyToManyField(Genre)
+
+    def __str__(self):
+        return self.name
