@@ -1,0 +1,22 @@
+from django.db import models
+from movielistapp.listmodels.person import Person
+from movielistapp.listmodels.country import Country
+from movielistapp.listmodels.type import Type
+from movielistapp.listmodels.genre import Genre
+
+class Movie(models.Model):
+    name=models.CharField(max_length=200)
+    year=models.IntegerField()
+    released=models.DateTimeField(auto_now_add=True)
+    runtime=models.IntegerField()
+    poster_link=models.CharField(max_length=200)
+    note=models.CharField(max_length=200)
+    plot=models.CharField(max_length=200)
+    awards=models.CharField(max_length=200)
+    dvd=models.DateTimeField()
+    director=models.ForeignKey(Person, on_delete=models.CASCADE, related_name='director')
+    scenarist=models.ForeignKey(Person, on_delete=models.CASCADE, related_name='scenarist')
+    actors=models.ManyToManyField(Person, related_name='actors')
+    country=models.ForeignKey(Country, on_delete=models.CASCADE)
+    type=models.ForeignKey(Type, on_delete=models.CASCADE)
+    genres=models.ManyToManyField(Genre)
