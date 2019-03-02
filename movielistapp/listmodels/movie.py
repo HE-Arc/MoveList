@@ -7,7 +7,7 @@ from movielistapp.listmodels.genre import Genre
 class Movie(models.Model):
     name=models.CharField(max_length=200)
     year=models.IntegerField()
-    released=models.DateTimeField(auto_now_add=True)
+    released=models.DateField()
     runtime=models.IntegerField()
     poster_link=models.CharField(max_length=200)
     note=models.CharField(max_length=200, null=True)
