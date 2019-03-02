@@ -1,8 +1,8 @@
 import React from 'react';
-import Search from './search.js';
-import Filter from './filter.js';
+import Search from './Search.js';
+import Filter from './Filter.js';
 
-class Main extends React.Component {
+class MainComponent extends React.Component {
     render() {
         return (
             <div>
@@ -10,7 +10,7 @@ class Main extends React.Component {
                 <Filter />
             </div>
         );
-    }    
+    }
 }
 
-export default Main;
+export default MainComponent;
