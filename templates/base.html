@@ -1,59 +1,62 @@
 {% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}{% endblock %}</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MovieList | {% block title %}{% endblock %}</title>
 
-    {% render_bundle 'main' 'css' %}
-  </head>
+  {% render_bundle 'main' 'css' %}
+</head>
 
-  <body>
-    <section class="hero is-warning is-small">
-  <!-- Hero head: will stick at the top -->
-  <div class="hero-head">
-    <nav class="navbar">
-      <div class="container">
-        <div class="navbar-brand">
-          <span class="navbar-burger burger" data-target="navbarMenuHeroA">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-        </div>
-        <div id="navbarMenuHeroA" class="navbar-menu">
-          <div class="navbar-end">
-            <a class="navbar-item is-active">
-              Accueil
-            </a>
-            <a class="navbar-item">
-              Connexion
-            </a>
-            <a class="navbar-item">
-              Profil
-            </a>
-            <a class="navbar-item">
-              Déconnexion
-            </a>
+<body>
+  <section class="hero is-warning is-small">
+    <!-- Hero head: will stick at the top -->
+    <div class="hero-head">
+      <nav class="navbar">
+        <div class="container">
+          <div class="navbar-brand">
+            <span class="navbar-burger burger" data-target="navbarMenuHeroA">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </div>
+          <div id="navbarMenuHeroA" class="navbar-menu">
+            <div class="navbar-end">
+              <a class="navbar-item is-active">
+                Accueil
+              </a>
+              <a class="navbar-item">
+                Connexion
+              </a>
+              <a class="navbar-item">
+                Profil
+              </a>
+              <a class="navbar-item">
+                Déconnexion
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
-  </div>
-
-  <!-- Hero content: will be in the middle -->
-  <div class="hero-body">
-    <div class="container has-text-centered">
-      <h1 class="title">
-        MovieList
-      </h1>
+      </nav>
     </div>
-  </div>
-</section>
-    {% block content %}{% endblock %}
 
-    {% render_bundle 'main' 'js' %}
-  </body>
+    <!-- Hero content: will be in the middle -->
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <h1 class="title">
+          MovieList
+        </h1>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+
+  {% render_bundle 'main' 'js' %}
+</body>
 </html>

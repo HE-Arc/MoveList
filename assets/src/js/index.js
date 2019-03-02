@@ -1,6 +1,4 @@
-import '../scss/index.scss';sh. She won't try a bidet because she doesn't want poop water splashing on her. I can't keep up with the comments. I'm pooped. (I'm trying to find humor in this because I'm really upset :(
-
-So yeah.
+import '../scss/index.scss';
 import '../../../node_modules/@fortawesome/fontawesome-free/js/all.min.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
