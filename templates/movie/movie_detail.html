@@ -16,8 +16,17 @@
   <div class="columns">
 
     <div class="column is-one-quarter">
-      <div class="content">
+      <div class="content has-text-centered">
         <img src="{{ movie.poster_link }}" alt="{{ movie.name }}" />
+      </div>
+
+      <div class="content">
+        <div id="AddToListButton" class="react-component"
+          data-movie-id="{{ movie.pk }}"
+          data-is-in-list="{{ False }}"
+          data-url-add="{{ 'add' }}"
+          data-url-remove="{{ 'remove' }}"
+        ></div>
       </div>
 
       <div class="content">

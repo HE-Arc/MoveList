@@ -4,10 +4,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import MainComponent from './MainComponent.js';
+import AddToListButton from './MovieList/AddToListButton.js';
 
 // https://stackoverflow.com/questions/31933359/using-react-in-a-multi-page-app
 const APPS = {
   MainComponent,
+  AddToListButton,
 };
 
 function renderAppInElement(el) {
