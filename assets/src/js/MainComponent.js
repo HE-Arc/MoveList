@@ -8,6 +8,7 @@ class MainComponent extends React.Component {
             <div>
                 <Search />
                 <Filter />
+                <ListMovie />
             </div>
         );
     }
