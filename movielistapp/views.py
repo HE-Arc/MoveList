@@ -5,28 +5,16 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
+from django.core import serializers
 
 import json
 
 from .models import Movie, ListMovie, State
 
-
-
-
-# Create your views here.
-
-# class MovieDetailView(generic.DetailView):
-#     model = Movie
-#     template_name = 'movie/movie_detail.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['has_in_list'] = ListMovie.objects.get(user=request.user.id, movie)
-#         return context
-
 def movie_detail(request, movie_pk):
     context = {}
     context['movie'] = Movie.objects.get(pk=movie_pk)
+    context['states'] = serializers.serialize('json', State.objects.all())
 
     try :
         context['list_id'] = ListMovie.objects.get(movie=context['movie'], user=request.user).pk

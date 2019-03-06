@@ -7,7 +7,8 @@ class AddToListButton extends React.Component
     {
       super(props);
       this.state = {
-        listId : JSON.parse(props.listId)
+        listId : JSON.parse(props.listId),
+        states : JSON.parse(props.states)
       };
     }
 
@@ -18,10 +19,13 @@ class AddToListButton extends React.Component
         return (
           <div>
             <div className="field">
-              <div class="select is-fullwidth">
+              <div className="select is-fullwidth">
                 <select>
-                  <option>Select dropdown</option>
-                  <option>With options</option>
+                  {
+                    this.state.states.map((value) => {
+                      return <option value={value.pk} key={value.pk}>{value.fields.name}</option>
+                    })
+                  }
                 </select>
               </div>
             </div>
@@ -38,7 +42,7 @@ class AddToListButton extends React.Component
       else
       {
         return (
-          <button className="button is-danger add-to-list-btn" onClick={() => this.removeFromList()}>Remove from list</button>
+          <button className="button is-danger add-to-list-btn" onClick={() => this.removeFromList()}>Remove from my list</button>
         );
       }
     }
@@ -82,6 +86,11 @@ class AddToListButton extends React.Component
     getHeaders()
     {
       return {"X-CSRFToken": this.props.csrf};
+    }
+
+    getTypesForSelect()
+    {
+
     }
 }
 
