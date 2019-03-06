@@ -7,13 +7,13 @@ class AddToListButton extends React.Component
     {
       super(props);
       this.state = {
-        isInList : props.isInList
+        listId : JSON.parse(props.listId)
       };
     }
 
     render()
     {
-      if(!this.state.isInList)
+      if(this.state.listId === null)
       {
         return (
           <button className="button is-link add-to-list-btn" onClick={() => this.addToList()}>Add to my List</button>
@@ -29,38 +29,43 @@ class AddToListButton extends React.Component
 
     addToList()
     {
-      fetch(`/list/add/${this.props.movieId}/`, {method: 'DELETE'})
+      fetch(`/list/add/${this.props.movieId}/`, {method: 'POST', headers: this.getHeaders()})
       .then((response) => {
-          if (response.status !== 204)
+          if (response.status !== 200)
           {
             console.log(`Error in adding to list - response code : ${response.status}`);
             return;
           }
 
-          this.setState({isInList : !this.state.isInList});
+          this.setState({listId : response.listId});
         }
       )
-      .catch((err) => {
-        console.log('Error in adding to list 2');
+      .catch((error) => {
+        console.log(error);
       });
     }
 
     removeFromList()
     {
-      fetch(`/list/remove/${this.props.movieId}/`, {method: 'DELETE'})
+      fetch(`/list/remove/${this.props.movieId}/`, {method: 'DELETE', headers: this.getHeaders()})
       .then((response) => {
-          if (response.status !== 200)
+          if (response.status !== 204)
           {
             console.log(`Error in removing from list - response code : ${response.status}`);
             return;
           }
 
-          this.setState({isInList : !this.state.isInList});
+          this.setState({listId : null});
         }
       )
-      .catch((err) => {
-        console.log('Error in adding to list 2');
+      .catch((error) => {
+        console.log(error);
       });
+    }
+
+    getHeaders()
+    {
+      return {"X-CSRFToken": this.props.csrf};
     }
 }
 
