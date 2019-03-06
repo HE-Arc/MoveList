@@ -16,9 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from . import views
+
 urlpatterns = [
-    path('', include('movielistapp.urls')),
-    path('list/', include('listmanagement.urls')),
-    path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')),
+    path('', include('django.contrib.auth.urls')),
+    path('signup/', views.SignUp.as_view(), name='signup'),
 ]
