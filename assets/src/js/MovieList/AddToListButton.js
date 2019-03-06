@@ -16,7 +16,23 @@ class AddToListButton extends React.Component
       if(this.state.listId === null)
       {
         return (
-          <button className="button is-link add-to-list-btn" onClick={() => this.addToList()}>Add to my List</button>
+          <div>
+            <div className="field">
+              <div class="select is-fullwidth">
+                <select>
+                  <option>Select dropdown</option>
+                  <option>With options</option>
+                </select>
+              </div>
+            </div>
+            <div className="field">
+              <div className="control">
+                <input className="input" name="rating" type="number" min="0" max="10" step="1" placeholder="Rating" />
+              </div>
+              <p className="help">Maximum : 10, Minimum 0</p>
+            </div>
+            <button className="button is-link add-to-list-btn" onClick={() => this.addToList()}>Add to my List</button>
+          </div>
         );
       }
       else
