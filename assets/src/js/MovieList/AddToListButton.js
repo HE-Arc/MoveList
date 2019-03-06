@@ -29,9 +29,9 @@ class AddToListButton extends React.Component
 
     addToList()
     {
-      fetch(`/list/add/${this.props.movieId}`, {method: 'DELETE'})
+      fetch(`/list/add/${this.props.movieId}/`, {method: 'DELETE'})
       .then((response) => {
-          if (response.status !== 200)
+          if (response.status !== 204)
           {
             console.log(`Error in adding to list - response code : ${response.status}`);
             return;
@@ -47,7 +47,7 @@ class AddToListButton extends React.Component
 
     removeFromList()
     {
-      fetch(`/list/remove/${this.props.movieId}`, {method: 'DELETE'})
+      fetch(`/list/remove/${this.props.movieId}/`, {method: 'DELETE'})
       .then((response) => {
           if (response.status !== 200)
           {
