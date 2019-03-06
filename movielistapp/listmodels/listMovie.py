@@ -8,3 +8,6 @@ class ListMovie(models.Model):
     movie=models.ForeignKey(Movie, on_delete=models.CASCADE)
     state=models.ForeignKey(State, on_delete=models.CASCADE)
     user=models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('movie', 'user')
