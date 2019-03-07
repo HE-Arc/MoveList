@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 import json
-from .models import Movie, ListMovie
+from .models import Movie, ListMovie, Genre
 
 
 
@@ -27,6 +27,7 @@ def movie_detail(request, movie_pk):
     context = {}
     context['movie'] = Movie.objects.get(pk=movie_pk)
     try :
+        # get movie from listmovie
         ListMovie.objects.get(movie=context['movie'], user=request.user)
         context['has_movie_in_list'] = True
     except ObjectDoesNotExist:
@@ -53,15 +54,15 @@ def add_movie_to_list(request, movie_pk):
 def main(request):
     context = {}
     if request.user is not None:
-        try :
+        try:
             movies = []
             for usermovie in ListMovie.objects.filter(user=request.user.pk):
-                movies.append(Movie.objects.filter(pk=int(usermovie.movie)))
-                context['movies'] = movies
-            context['user_has_movies'] = True
+                movies.append(usermovie.movie)
+            context['movies'] = serializers.serialize('json', list(movies))
+            context['genres'] = serializers.serialize('json', list(Genre.objects.all()))
         except ObjectDoesNotExist:
-            context['user_has_movies'] = False
-
+            context['movies'] = None
+            context['genre'] = None
     return render(request, 'main.html', context)
 
 def index(request):

@@ -14,7 +14,7 @@ class MainComponent extends React.Component {
             <div>
                 <Search />
                 <Filter />
-                <ListMovie  movies={ this.props.movies } />
+                <ListMovie  movies={ this.props.movies } genres={ this.props.genres } />
             </div>
         );
     }
