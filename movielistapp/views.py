@@ -27,10 +27,11 @@ def movie_detail(request, movie_pk):
 def add_movie_to_list(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
     current_user = request.user
-    state = State.objects.get(pk=1)
+
+    data = json.loads(request.body)
 
     try:
-        list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=state)
+        list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=State.objects.get(pk=data['state']), note=data['rating'])
         return JsonResponse( {'listId': list_movie.pk}, status=200)
     except IntegrityError as e:
         return HttpResponseBadRequest()

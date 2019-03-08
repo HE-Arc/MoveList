@@ -17,10 +17,10 @@ class AddToListButton extends React.Component
       if(this.state.listId === null)
       {
         return (
-          <div>
+          <form onSubmit={(e) => this.addToList(e)}>
             <div className="field">
               <div className="select is-fullwidth">
-                <select>
+                <select name="statePk" id="state-pk">
                   {
                     this.state.states.map((value) => {
                       return <option value={value.pk} key={value.pk}>{value.fields.name}</option>
@@ -35,8 +35,8 @@ class AddToListButton extends React.Component
               </div>
               <p className="help">Maximum : 10, Minimum 0</p>
             </div>
-            <button className="button is-link add-to-list-btn" onClick={() => this.addToList()}>Add to my List</button>
-          </div>
+            <button type="submit" className="button is-link add-to-list-btn">Add to my List</button>
+          </form>
         );
       }
       else
@@ -47,10 +47,18 @@ class AddToListButton extends React.Component
       }
     }
 
-    addToList()
+    addToList(event)
     {
-      fetch(`/list/add/${this.props.movieId}/`, {method: 'POST', headers: this.getHeaders()})
-      .then((response) => {
+      event.preventDefault();
+      fetch(`/list/add/${this.props.movieId}/`, {
+        method: 'POST',
+        headers: this.getHeaders(),
+
+        body: JSON.stringify({
+          state: event.target.statePk.value,
+          rating: event.target.rating.value == "" ? null : event.target.rating.value
+        })
+      }).then((response) => {
           if (response.status !== 200)
           {
             console.log(`Error in adding to list - response code : ${response.status}`);
