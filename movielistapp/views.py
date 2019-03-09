@@ -6,10 +6,8 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadReque
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
-
 import json
-
-from .models import Movie, ListMovie, State
+from .models import Movie, ListMovie, Genre, State
 
 def movie_detail(request, movie_pk):
     context = {}
@@ -46,6 +44,20 @@ def remove_movie_from_list(request, movie_pk):
         return HttpResponse(status=204)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
+
+def main(request):
+    context = {}
+    if request.user is not None:
+        try:
+            movies = []
+            for usermovie in ListMovie.objects.filter(user=request.user.pk):
+                movies.append(usermovie.movie)
+            context['movies'] = serializers.serialize('json', list(movies))
+            context['genres'] = serializers.serialize('json', list(Genre.objects.all()))
+        except ObjectDoesNotExist:
+            context['movies'] = None
+            context['genre'] = None
+    return render(request, 'main.html', context)
 
 def index(request):
     context = {}
