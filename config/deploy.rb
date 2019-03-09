@@ -1,8 +1,43 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.11.0"
 
+<<<<<<< HEAD
 set :application, "my_app_name"
 set :repo_url, "git@example.com:me/my_repo.git"
+=======
+set :application, "movielist"
+set :repo_url, "git@github.com:HE-Arc/MovieList.git"
+
+
+after 'deploy:publishing', 'uwsgi:restart'
+
+namespace :uwsgi do
+  desc 'Restart application'
+  task :restart do
+    on roles(:web) do |h|
+      execute :sudo, 'sv reload uwsgi'
+    end
+  end
+end
+
+after 'deploy:updating', 'python:create_venv'
+
+namespace :python do
+
+  def venv_path
+    File.join(shared_path, 'venv')
+  end
+
+  desc 'Create venv'
+  task :create_venv do
+    on roles([:app, :web]) do |h|
+      execute "python3.6 -m venv #{venv_path}"
+      execute "source #{venv_path}/bin/activate"
+      execute "#{venv_path}/bin/pip install -r #{release_path}/requirements.txt"
+    end
+  end
+end
+>>>>>>> master
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp

@@ -23,9 +23,11 @@
       <div class="content">
         <div id="AddToListButton" class="react-component"
           data-movie-id="{{ movie.pk }}"
-          data-is-in-list="{{ has_movie_in_list }}"
+          data-list-id="{{ list_id }}"
           data-url-add="{{ 'add' }}"
           data-url-remove="{{ 'remove' }}"
+          data-states="{{ states }}"
+          data-csrf="{{ csrf_token }}"
         ></div>
       </div>
 

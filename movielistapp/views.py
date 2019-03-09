@@ -2,36 +2,23 @@ from django.shortcuts import render
 from django.views import generic, View
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 import json
-from .models import Movie, ListMovie, Genre
-
-
-
-
-# Create your views here.
-
-# class MovieDetailView(generic.DetailView):
-#     model = Movie
-#     template_name = 'movie/movie_detail.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['has_in_list'] = ListMovie.objects.get(user=request.user.id, movie)
-#         return context
+from .models import Movie, ListMovie, Genre, State
 
 def movie_detail(request, movie_pk):
     context = {}
     context['movie'] = Movie.objects.get(pk=movie_pk)
+    context['states'] = serializers.serialize('json', State.objects.all())
+
     try :
-        # get movie from listmovie
-        ListMovie.objects.get(movie=context['movie'], user=request.user)
-        context['has_movie_in_list'] = True
+        context['list_id'] = ListMovie.objects.get(movie=context['movie'], user=request.user).pk
     except ObjectDoesNotExist:
-        context['has_movie_in_list'] = False
+        context['list_id'] = json.dumps(None)
+
     return render(request, 'movie/movie_detail.html', context)
 
 
@@ -39,17 +26,23 @@ def add_movie_to_list(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
     current_user = request.user
 
-    list_movie = ListMovie.objects.create()
-    list_movie.user = current_user
-    list_movie.movie = movie
+    data = json.loads(request.body)
 
     try:
-        list_movie.save()
-        return HttpResponse(status=204)
+        list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=State.objects.get(pk=data['state']), note=data['rating'])
+        return JsonResponse( {'listId': list_movie.pk}, status=200)
     except IntegrityError as e:
-        return HttpResponse(status=409)
+        return HttpResponseBadRequest()
 
+def remove_movie_from_list(request, movie_pk):
+    movie = Movie.objects.get(pk=movie_pk)
+    current_user = request.user
 
+    try:
+        list_movie = ListMovie.objects.get(user=current_user, movie=movie).delete()
+        return HttpResponse(status=204)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound()
 
 def main(request):
     context = {}
