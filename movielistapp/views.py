@@ -16,11 +16,12 @@ def movie_detail(request, movie_pk):
     context['movie'] = Movie.objects.get(pk=movie_pk)
     context['states'] = serializers.serialize('json', State.objects.all())
 
-    try :
-        context['list_id'] = ListMovie.objects.get(movie=context['movie'], user=request.user).pk
-    except ObjectDoesNotExist:
-        context['list_id'] = json.dumps(None)
-
+    if request.user.is_authenticated:
+        try :
+            context['list_id'] = ListMovie.objects.get(movie=context['movie'], user=request.user).pk
+        except ObjectDoesNotExist:
+            context['list_id'] = json.dumps(None)
+            
     return render(request, 'movie/movie_detail.html', context)
 
 
