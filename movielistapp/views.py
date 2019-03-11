@@ -43,10 +43,10 @@ def add_json_db(movie):
         type_movie = get_or_add_in_db(movie['Type'], Type)
         writer = many_get_or_add_in_db(movie['Writer'], Person)
         new_movie = Movie.objects.create(imdbID=movie['imdbID'], name=movie['Title'],
-                                         year=movie['Year'], released=movie['Released'],
-                                         runtime=movie['Runtime'], poster_link=movie['Poster'],
+                                         year=movie['Year'], released='2019-12-12',
+                                         runtime=155, poster_link=movie['Poster'],
                                          note='7.7', plot=movie['Plot'],
-                                         awards=movie['Awards'], dvd=movie['DVD'], director=director,
+                                         awards=movie['Awards'], dvd='2019-12-12', director=director,
                                          type=type_movie)
         add_relation(new_movie.scenarist, writer)
         add_relation(new_movie.actors, actors)
@@ -61,12 +61,12 @@ def many_get_or_add_in_db(str_data, model: models.Model):
     list_data = []
     actors = str(str_data).split(", ")
     for actor in actors:
-        list_data.append(model.objects.get_or_create(name=actor))
+        list_data.append(model.objects.get_or_create(name=actor)[0])
     return list_data
 
 
 def get_or_add_in_db(str_data, model: models.Model):
-    return model.objects.get_or_create(name=str_data)
+    return model.objects.get_or_create(name=str_data)[0]
 
 
 def add_relation(movie, datas):
