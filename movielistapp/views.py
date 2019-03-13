@@ -15,7 +15,7 @@ from .models import Movie, ListMovie, Genre, State
 
 def movie_detail(request, movie_pk):
     context = {}
-    context['movie'] = Movie.objects.get(pk=movie_pk)
+    context['movie'] = Movie.objects.select_related('type', 'director').get(pk=movie_pk)
     context['states'] = serializers.serialize('json', State.objects.all())
 
     if request.user.is_authenticated:
@@ -49,12 +49,22 @@ def remove_movie_from_list(request, movie_pk):
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
 
-def display_list(request):
+def display_my_list(request):
+    return display_list(request.user, request)
+
+def display_user_list(request, user_pk):
+    try:
+        user = User.objects.get(pk=user_pk)
+        return display_list(user, request)
+    except ObjectDoesNotExist:
+        HttpResponseNotFound()
+
+def display_list(user, request):
     context = {}
-    if request.user is not None:
+    if user is not None:
         try:
             movies = []
-            usermovies = ListMovie.objects.select_related('movie').filter(user=request.user.pk)
+            usermovies = ListMovie.objects.select_related('movie').filter(user=user.pk)
             movies = list(map(lambda element : element.movie, usermovies))
 
             context['movies'] = serializers.serialize('json', movies)
