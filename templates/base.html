@@ -25,18 +25,24 @@
           </div>
           <div id="navbarMenuHeroA" class="navbar-menu">
             <div class="navbar-end">
-              <a class="navbar-item is-active">
+              <a class="navbar-item is-active" href="{% url 'index' %}">
                 Accueil
               </a>
-              <a class="navbar-item">
-                Connexion
-              </a>
-              <a class="navbar-item">
-                Profil
-              </a>
-              <a class="navbar-item">
-                Déconnexion
-              </a>
+              {% if not user.is_authenticated %}
+                <a class="navbar-item" href="{% url 'signup' %}">
+                  Sign up
+                </a>
+                <a class="navbar-item" href="{% url 'login' %}">
+                  Connexion
+                </a>
+              {% else %}
+                <a class="navbar-item">
+                  My List
+                </a>
+                <a class="navbar-item" href="{% url 'logout' %}">
+                  Déconnexion
+                </a>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -47,7 +53,7 @@
     <div class="hero-body">
       <div class="container has-text-centered">
         <h1 class="title">
-          MovieList
+          <a href="{% url 'index' %}">MovieList</a>
         </h1>
       </div>
     </div>

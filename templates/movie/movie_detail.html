@@ -16,9 +16,22 @@
   <div class="columns">
 
     <div class="column is-one-quarter">
-      <div class="content">
+      <div class="content has-text-centered">
         <img src="{{ movie.poster_link }}" alt="{{ movie.name }}" />
       </div>
+
+      {% if user.is_authenticated %}
+        <div class="content">
+          <div id="AddToListButton" class="react-component"
+            data-movie-id="{{ movie.pk }}"
+            data-list-id="{{ list_id }}"
+            data-url-add="{{ 'add' }}"
+            data-url-remove="{{ 'remove' }}"
+            data-states="{{ states }}"
+            data-csrf="{{ csrf_token }}"
+          ></div>
+        </div>
+      {% endif %}
 
       <div class="content">
         <h3 class="is-5 title">
