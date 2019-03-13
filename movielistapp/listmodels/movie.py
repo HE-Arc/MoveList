@@ -3,6 +3,7 @@ from movielistapp.listmodels.person import Person
 from movielistapp.listmodels.country import Country
 from movielistapp.listmodels.type import Type
 from movielistapp.listmodels.genre import Genre
+from django_mysql.models import JSONField
 
 
 class Movie(models.Model):
@@ -12,7 +13,7 @@ class Movie(models.Model):
     released = models.DateField()
     runtime = models.IntegerField()
     poster_link = models.CharField(max_length=200)
-    note = models.CharField(max_length=200, null=True)
+    ratings = JSONField()
     plot = models.CharField(max_length=200)
     awards = models.CharField(max_length=200, null=True)
     dvd = models.DateField(null=True)

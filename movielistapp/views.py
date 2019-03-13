@@ -2,10 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import generic, View
 from django.db import models
-from django.urls import reverse_lazy
 from .models import Movie, Person, Genre, Country, Type
-import requests
-import json
+import requests, datetime
+
 
 from django.contrib.auth.models import User
 
@@ -43,10 +42,10 @@ def add_json_db(movie):
         type_movie = get_or_add_in_db(movie['Type'], Type)
         writer = many_get_or_add_in_db(movie['Writer'], Person)
         new_movie = Movie.objects.create(imdbID=movie['imdbID'], name=movie['Title'],
-                                         year=movie['Year'], released='2019-12-12',
+                                         year=movie['Year'], released=format_date(movie['Released']),
                                          runtime=155, poster_link=movie['Poster'],
-                                         note='7.7', plot=movie['Plot'],
-                                         awards=movie['Awards'], dvd='2019-12-12', director=director,
+                                         ratings=movie['Ratings'], plot=movie['Plot'],
+                                         awards=movie['Awards'], dvd=format_date(movie['DVD']), director=director,
                                          type=type_movie)
         add_relation(new_movie.scenarist, writer)
         add_relation(new_movie.actors, actors)
@@ -72,3 +71,7 @@ def get_or_add_in_db(str_data, model: models.Model):
 def add_relation(movie, datas):
     for data in datas:
         movie.add(data)
+
+
+def format_date(date):
+    return datetime.datetime.strptime(date, '%d %b %Y').strftime('%Y-%m-%d')
