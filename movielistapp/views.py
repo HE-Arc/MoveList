@@ -15,6 +15,9 @@ from .models import Movie, ListMovie, Genre, State
 
 def movie_detail(request, movie_pk):
     context = {}
+    movie = Movie.objects.get(pk=movie_pk)
+    context['ratings'] = movie.ratings[0]['Value']
+    context['movie'] = movie
     context['movie'] = Movie.objects.get(pk=movie_pk)
     context['states'] = serializers.serialize('json', State.objects.all())
 
