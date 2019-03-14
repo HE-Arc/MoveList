@@ -38,9 +38,6 @@ export default class ListMovie extends React.Component {
                                     </figure>
                                 </div>
                                 <div className="tile is-10 is-vertical is-parent">
-                                    <div className="tile is-child is-12 has-text-centered">
-                                        <h1 className="subtitle has-text-weight-bold">{ movie.fields.name }</h1>
-                                    </div>
                                     <div className="tile is-child">
                                         <span className="has-text-weight-bold">Genre </span>
                                         <span>{this.createListGenres(movie.fields.genres)}</span>
