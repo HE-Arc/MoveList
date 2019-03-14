@@ -1,109 +1,111 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{movie.name}}
+    {{ movie.name }}
 {% endblock %}
 
 {% block content %}
-  <h2 class="title">
-    {{ movie.name }}
-    <span class="tag is-info">{{ movie.type }}</span>
-    {% for genre in movie.genres.all %}
-        <span class="tag is-dark">{{ genre }}</span>
-    {% endfor %}
-  </h2>
+    <h2 class="title">
+        {{ movie.name }}
+        <span class="tag is-info">{{ movie.type }}</span>
+        {% for genre in movie.genres.all %}
+            <span class="tag is-dark">{{ genre }}</span>
+        {% endfor %}
+    </h2>
 
-  <div class="columns">
+    <div class="columns">
 
-    <div class="column is-one-quarter">
-      <div class="content has-text-centered">
-        <img src="{{ movie.poster_link }}" alt="{{ movie.name }}" />
-      </div>
+        <div class="column is-one-quarter">
+            <div class="content has-text-centered">
+                <img src="{{ movie.poster_link }}" alt="{{ movie.name }}"/>
+            </div>
 
-      {% if user.is_authenticated %}
-        <div class="content">
-          <div id="AddToListButton" class="react-component"
-            data-movie-id="{{ movie.pk }}"
-            data-list-id="{{ list_id }}"
-            data-url-add="{{ 'add' }}"
-            data-url-remove="{{ 'remove' }}"
-            data-states="{{ states }}"
-            data-csrf="{{ csrf_token }}"
-          ></div>
+            {% if user.is_authenticated %}
+                <div class="content">
+                    <div id="AddToListButton" class="react-component"
+                         data-movie-id="{{ movie.pk }}"
+                         data-list-id="{{ list_id }}"
+                         data-url-add="{{ 'add' }}"
+                         data-url-remove="{{ 'remove' }}"
+                         data-states="{{ states }}"
+                         data-csrf="{{ csrf_token }}"
+                    ></div>
+                </div>
+            {% endif %}
+
+            <div class="content">
+                <h3 class="is-5 title">
+                    Ratings
+                </h3>
+                <ul>
+                    {% for rating in movie.ratings %}
+                        <li>
+                            <span class="has-text-weight-bold">{{ rating.Source }} : </span>
+                            {{ rating.Value }}
+                        </li>
+                    {% endfor %}
+                    <li>
+                        <span class="has-text-weight-bold">MovieList : </span> 5
+                    </li>
+                </ul>
+            </div>
         </div>
-      {% endif %}
 
-      <div class="content">
-        <h3 class="is-5 title">
-          Ratings
-        </h3>
+        <div class="column is-three-quarter">
+            <div class="columns">
+                <div class="column">
+                    <h3 class="is-4 subtitle">Year</h3>
+                    <p>
+                        {{ movie.year }}
+                    </p>
+                </div>
 
-        <ul>
-          <li>
-            <span class="has-text-weight-bold">IMDB : </span> {{movie.ratings}}
-          </li>
-          <li>
-            <span class="has-text-weight-bold">MovieList : </span> 5
-          </li>
-        </ul>
-      </div>
+                <div class="column">
+                    <h3 class="is-4 subtitle">DVD Release</h3>
+                    <p>
+                        {{ movie.dvd | date }}
+                    </p>
+                </div>
+
+                <div class="column">
+                    <h3 class="is-4 subtitle">Country</h3>
+                    <p>
+                        {{ movie.country.all | join:', ' }}
+                    </p>
+                </div>
+
+                <div class="column">
+                    <h3 class="is-4 subtitle">Runtime</h3>
+                    <p>
+                        {{ movie.runtime }} min
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="is-4 subtitle">Plot</h3>
+            <p class="content">
+                {{ movie.plot }}
+            </p>
+
+            <h3 class="is-4 subtitle">Awards</h3>
+            <p class="content">
+                {{ movie.awards }}
+            </p>
+
+            <h3 class="is-4 subtitle">Actors</h3>
+            <p class="content">
+                {{ movie.actors.all | join:', ' }}
+            </p>
+
+            <h3 class="is-4 subtitle">Director</h3>
+            <p class="content">
+                {{ movie.director }}
+            </p>
+
+            <h3 class="is-4 subtitle">Scenarist</h3>
+            <p class="content">
+                {{ movie.scenarist.all | join:', ' }}
+            </p>
+        </div>
     </div>
-
-    <div class="column is-three-quarter">
-      <div class="columns">
-        <div class="column">
-          <h3 class="is-4 subtitle">Year</h3>
-          <p>
-            {{ movie.year }}
-          </p>
-        </div>
-
-        <div class="column">
-          <h3 class="is-4 subtitle">DVD Release</h3>
-          <p>
-            {{ movie.dvd | date }}
-          </p>
-        </div>
-
-        <div class="column">
-          <h3 class="is-4 subtitle">Country</h3>
-          <p>
-            {{ movie.country.all | join:', ' }}
-          </p>
-        </div>
-
-        <div class="column">
-          <h3 class="is-4 subtitle">Runtime</h3>
-          <p>
-            {{ movie.runtime }} min
-          </p>
-        </div>
-      </div>
-
-      <h3 class="is-4 subtitle">Plot</h3>
-      <p class="content">
-        {{ movie.plot }}
-      </p>
-
-      <h3 class="is-4 subtitle">Awards</h3>
-      <p class="content">
-        {{ movie.awards }}
-      </p>
-
-      <h3 class="is-4 subtitle">Actors</h3>
-      <p class="content">
-        {{ movie.actors.all | join:', ' }}
-      </p>
-
-      <h3 class="is-4 subtitle">Director</h3>
-      <p class="content">
-        {{ movie.director }}
-      </p>
-
-      <h3 class="is-4 subtitle">Scenarist</h3>
-      <p class="content">
-        {{ movie.scenarist.all | join:', ' }}
-      </p>
-    </div>
-  </div>
 {% endblock %}
