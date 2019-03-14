@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,10 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '0=yc1qj+-hvu+v753s9wak2x3ohl@km!x5cw6b8*5a-o#xr+^-'
+SECRET_KEY = os.getenv('APP_KEY', '0=yc1qj+-hvu+v753s9wak2x3ohl@km!x5cw6b8*5a-o#xr+^-')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (sys.argv[1] == 'runserver')
 
 ALLOWED_HOSTS = ['movielist.srvz-webapp.he-arc.ch', 'localhost', '127.0.0.1']
 
@@ -131,7 +132,7 @@ DATABASES = {
         'NAME': os.getenv('GROUPNAME', 'movielist'),
         'USER': os.getenv('GROUPNAME', 'movielist'),
         'PASSWORD': os.getenv('PASSWORD', '1234'),
-        'HOST': 'localhost',
+        'HOST': os.getenv('MYSQL_HOST', 'localhost'),
         'PORT': os.getenv('MYSQL_PORT', 3306),
     }
 }
