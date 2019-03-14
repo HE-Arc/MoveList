@@ -27,13 +27,9 @@ export default class ListMovie extends React.Component {
             JSON.parse(this.props.movies).forEach(movie => {
                 listThumbails.push(
                     <div className="tile box is-parent is-vertical" key={ movie.pk }>
-<<<<<<< HEAD
-                        
-=======
                         <div className="tile is-child is-12 has-text-centered">
                             <h1 className="subtitle has-text-weight-bold"><a className="has-text-black" href={'/movie/' + movie.pk}>{ movie.fields.name }</a></h1>
                         </div>
->>>>>>> origin/master
                         <div className="tile is-child">
                             <div className="tile">
                                 <div className="tile is-2 has-text-centered is-vcentered column">
@@ -82,11 +78,5 @@ export default class ListMovie extends React.Component {
                 </div>
             </section>
         );
-<<<<<<< HEAD
     }    
 }
-=======
-    }
-}
-export default ListMovie;
->>>>>>> origin/master
