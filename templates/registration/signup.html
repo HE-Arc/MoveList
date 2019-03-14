@@ -3,44 +3,45 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-
-  <h2>Sign up</h2>
-  <form method="post">
-    {% csrf_token %}
-    <div class="field">
-      <label class="label" for="{{ form.username.name }}">{{ form.username.label }}</label>
-      <div class="control">
-        <input type="text" id="{{ form.username.name }}" name="{{ form.username.name }}" class="input" required autofocus />
+  <div class="section">
+    <h2 class="title">Sign up</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="field">
+        <label class="label" for="{{ form.username.name }}">{{ form.username.label }}</label>
+        <div class="control">
+          <input type="text" id="{{ form.username.name }}" name="{{ form.username.name }}" class="input" required autofocus />
+        </div>
+        <p class="help">{{ form.username.help_text }}</p>
+        {% for error in form.username.errors %}
+          <p class="help is-danger">{{ error }}</p>
+        {% endfor %}
       </div>
-      <p class="help">{{ form.username.help_text }}</p>
-      {% for error in form.username.errors %}
-        <p class="help is-danger">{{ error }}</p>
-      {% endfor %}
-    </div>
 
-    <div class="field">
-      <label class="label" for="{{ form.password1.name }}">{{ form.password1.label }}</label>
-      <div class="control">
-        <input type="password" id="{{form.password1.name}}" name="{{ form.password1.name }}" class="input" required autofocus />
+      <div class="field">
+        <label class="label" for="{{ form.password1.name }}">{{ form.password1.label }}</label>
+        <div class="control">
+          <input type="password" id="{{form.password1.name}}" name="{{ form.password1.name }}" class="input" required autofocus />
+        </div>
+        <p class="help">{{ form.password1.help_text }}</p>
+        {% for error in form.password1.errors %}
+          <p class="help is-danger">{{ error }}</p>
+        {% endfor %}
       </div>
-      <p class="help">{{ form.password1.help_text }}</p>
-      {% for error in form.password1.errors %}
-        <p class="help is-danger">{{ error }}</p>
-      {% endfor %}
-    </div>
 
-    <div class="field">
-      <label class="label" for="{{ form.password2.name }}">{{ form.password2.label }}</label>
-      <div class="control">
-        <input type="password" id="{{form.password2.name}}" name="{{ form.password2.name }}" class="input" required autofocus />
+      <div class="field">
+        <label class="label" for="{{ form.password2.name }}">{{ form.password2.label }}</label>
+        <div class="control">
+          <input type="password" id="{{form.password2.name}}" name="{{ form.password2.name }}" class="input" required autofocus />
+        </div>
+        {% for error in form.password2.errors %}
+          <p class="help is-danger">{{ error }}</p>
+        {% endfor %}
       </div>
-      {% for error in form.password2.errors %}
-        <p class="help is-danger">{{ error }}</p>
-      {% endfor %}
-    </div>
 
-    <div class="field">
-      <button class="button is-link">Submit</button>
-    </div>
-  </form>
+      <div class="field">
+        <button class="button is-link">Submit</button>
+      </div>
+    </form>
+  </div>
 {% endblock %}

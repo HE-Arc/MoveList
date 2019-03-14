@@ -10,13 +10,13 @@ from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 import json
-import requests, datetime
-from .models import Movie, ListMovie, Genre, State
+from .models import Movie, ListMovie, Genre, State, Country
+
 
 
 def movie_detail(request, movie_pk):
     context = {}
-    context['movie'] = Movie.objects.get(pk=movie_pk)
+    context['movie'] = Movie.objects.select_related('type', 'director').get(pk=movie_pk)
     context['states'] = serializers.serialize('json', State.objects.all())
 
     if request.user.is_authenticated:
@@ -53,19 +53,33 @@ def remove_movie_from_list(request, movie_pk):
         return HttpResponseNotFound()
 
 
-def main(request):
+def display_my_list(request):
+    return display_list(request.user, request)
+
+def display_user_list(request, user_pk):
+    try:
+        user = User.objects.get(pk=user_pk)
+        return display_list(user, request)
+    except ObjectDoesNotExist:
+        HttpResponseNotFound()
+
+def display_list(user, request):
+
     context = {}
-    if request.user is not None:
+    if user is not None:
         try:
             movies = []
-            for usermovie in ListMovie.objects.filter(user=request.user.pk):
-                movies.append(usermovie.movie)
-            context['movies'] = serializers.serialize('json', list(movies))
+            usermovies = ListMovie.objects.select_related('movie').filter(user=user.pk)
+            movies = list(map(lambda element : element.movie, usermovies))
+
+            context['movies'] = serializers.serialize('json', movies)
             context['genres'] = serializers.serialize('json', list(Genre.objects.all()))
+            context['countries'] = serializers.serialize('json', list(Country.objects.all()))
         except ObjectDoesNotExist:
             context['movies'] = None
-            context['genre'] = None
-    return render(request, 'main.html', context)
+            context['genres'] = None
+            context['countries'] = None
+    return render(request, 'my_list.html', context)
 
 
 def index(request):

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block title %}My List{% endblock %}
+
+{% block content %}
+  <div id="MainComponent" class="react-component" data-movies="{{ movies }}" data-genres="{{ genres }}" data-countries="{{ countries }}"></div>
+{% endblock %}
