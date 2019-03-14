@@ -59,12 +59,10 @@
 #     auth_methods: %w(publickey password)
 #     # password: "please use keys"
 #   }
-<<<<<<< HEAD
-=======
-server "movielist.srvz-webapp.he-arc.ch", user: "poweruser", 
+
+server "movielist.srvz-webapp.he-arc.ch", user: "poweruser",
 			             roles: %w{app db web}, port: 2275
 
 set :application, "movielist"
 set :repo_url, "git@github.com:HE-Arc/MovieList.git"
 set :deploy_to, "/var/www/#{fetch(:application)}"
->>>>>>> master
