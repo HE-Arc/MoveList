@@ -109,7 +109,7 @@ def add_json_db(movie):
         writer = many_get_or_add_in_db(movie['Writer'], Person)
         new_movie = Movie.objects.create(imdbID=movie['imdbID'], name=movie['Title'],
                                          year=movie['Year'], released=format_date(movie['Released']),
-                                         runtime=155, poster_link=movie['Poster'],
+                                         runtime=movie['Runtime'], poster_link=movie['Poster'],
                                          ratings=movie['Ratings'], plot=movie['Plot'],
                                          awards=movie['Awards'], dvd=format_date(movie['DVD']), director=director,
                                          type=type_movie)
@@ -140,4 +140,6 @@ def add_relation(movie, datas):
 
 
 def format_date(date):
+    if date == 'N/A':
+        return None
     return datetime.datetime.strptime(date, '%d %b %Y').strftime('%Y-%m-%d')
