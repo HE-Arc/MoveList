@@ -13,20 +13,21 @@ import json
 import requests, datetime
 from .models import Movie, ListMovie, Genre, State
 
+
 def movie_detail(request, movie_pk):
     context = {}
     movie = Movie.objects.get(pk=movie_pk)
-    context['ratings'] = movie.ratings[0]['Value']
+    ratings = movie.ratings
+    context['ratings'] = ratings
     context['movie'] = movie
-    context['movie'] = Movie.objects.get(pk=movie_pk)
     context['states'] = serializers.serialize('json', State.objects.all())
 
     if request.user.is_authenticated:
-        try :
+        try:
             context['list_id'] = ListMovie.objects.get(movie=context['movie'], user=request.user).pk
         except ObjectDoesNotExist:
             context['list_id'] = json.dumps(None)
-            
+
     return render(request, 'movie/movie_detail.html', context)
 
 
@@ -37,10 +38,12 @@ def add_movie_to_list(request, movie_pk):
     data = json.loads(request.body)
 
     try:
-        list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=State.objects.get(pk=data['state']), note=data['rating'])
-        return JsonResponse( {'listId': list_movie.pk}, status=200)
+        list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=State.objects.get(pk=data['state']),
+                                              note=data['rating'])
+        return JsonResponse({'listId': list_movie.pk}, status=200)
     except IntegrityError as e:
         return HttpResponseBadRequest()
+
 
 def remove_movie_from_list(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
@@ -51,6 +54,7 @@ def remove_movie_from_list(request, movie_pk):
         return HttpResponse(status=204)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
+
 
 def main(request):
     context = {}
@@ -65,6 +69,7 @@ def main(request):
             context['movies'] = None
             context['genre'] = None
     return render(request, 'main.html', context)
+
 
 def index(request):
     context = {}
