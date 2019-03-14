@@ -24,7 +24,7 @@ SECRET_KEY = '0=yc1qj+-hvu+v753s9wak2x3ohl@km!x5cw6b8*5a-o#xr+^-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['movielist.srvz-webapp.he-arc.ch']
 
 # Application definition
 
@@ -128,10 +128,10 @@ LOGIN_REDIRECT_URL = 'index'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'movielist',
-        'USER': 'movielist',
-        'PASSWORD': '1234',
+        'NAME': os.getenv('GROUPNAME', 'movielist'),
+        'USER': os.getenv('GROUPNAME', 'movielist'),
+        'PASSWORD': os.getenv('PASSWORD', '1234'),
         'HOST': 'localhost',
-        'PORT': '3306',
+        'PORT': os.getenv('MYSQL_PORT', 3306),
     }
 }

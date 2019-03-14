@@ -40,7 +40,7 @@
 
         <ul>
           <li>
-            <span class="has-text-weight-bold">IMDB : </span> {{movie.note}}
+            <span class="has-text-weight-bold">IMDB : </span> {{movie.ratings}}
           </li>
           <li>
             <span class="has-text-weight-bold">MovieList : </span> 5
@@ -68,7 +68,7 @@
         <div class="column">
           <h3 class="is-4 subtitle">Country</h3>
           <p>
-            {{ movie.country }}
+            {{ movie.country.all | join:', ' }}
           </p>
         </div>
 
@@ -102,7 +102,7 @@
 
       <h3 class="is-4 subtitle">Scenarist</h3>
       <p class="content">
-        {{ movie.scenarist }}
+        {{ movie.scenarist.all | join:', ' }}
       </p>
     </div>
   </div>

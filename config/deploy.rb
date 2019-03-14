@@ -1,10 +1,6 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.11.0"
 
-<<<<<<< HEAD
-set :application, "my_app_name"
-set :repo_url, "git@example.com:me/my_repo.git"
-=======
 set :application, "movielist"
 set :repo_url, "git@github.com:HE-Arc/MovieList.git"
 
@@ -37,7 +33,6 @@ namespace :python do
     end
   end
 end
->>>>>>> master
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp

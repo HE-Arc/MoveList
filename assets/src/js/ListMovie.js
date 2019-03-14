@@ -13,7 +13,7 @@ export default class ListMovie extends React.Component {
         currentGenres.forEach(pk => {
             if (listGenres.length > 0)
             {
-                listGenres.push(', '); 
+                listGenres.push(', ');
             }
             listGenres.push(genres.filter( genre => genre.pk == pk)[0].fields.name);
         });
@@ -27,13 +27,19 @@ export default class ListMovie extends React.Component {
             JSON.parse(this.props.movies).forEach(movie => {
                 listThumbails.push(
                     <div className="tile box is-parent is-vertical" key={ movie.pk }>
+<<<<<<< HEAD
                         
+=======
+                        <div className="tile is-child is-12 has-text-centered">
+                            <h1 className="subtitle has-text-weight-bold"><a className="has-text-black" href={'/movie/' + movie.pk}>{ movie.fields.name }</a></h1>
+                        </div>
+>>>>>>> origin/master
                         <div className="tile is-child">
                             <div className="tile">
                                 <div className="tile is-2 has-text-centered is-vcentered column">
                                     <figure className="container image is-128x128">
                                         <img src={ movie.fields.poster_link } alt={ movie.fields.name } />
-                                    </figure>                              
+                                    </figure>
                                 </div>
                                 <div className="tile is-10 is-vertical is-parent">
                                     <div className="tile is-child is-12 has-text-centered">
@@ -50,7 +56,7 @@ export default class ListMovie extends React.Component {
                                     <div className="tile is-child">
                                         <h2 className="has-text-weight-bold">Plot</h2>
                                         <span>{ movie.fields.plot }</span>
-                                    </div>          
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -76,5 +82,11 @@ export default class ListMovie extends React.Component {
                 </div>
             </section>
         );
+<<<<<<< HEAD
     }    
 }
+=======
+    }
+}
+export default ListMovie;
+>>>>>>> origin/master
