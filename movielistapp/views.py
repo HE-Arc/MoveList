@@ -10,6 +10,7 @@ from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 import json
+import requests, datetime
 from .models import Movie, ListMovie, Genre, State, Country
 
 
@@ -95,7 +96,6 @@ class search(View):
             r = requests.get(api_request)
             f = r.json()
             m = add_json_db(f)
-            return HttpResponse(f["Writer"])
         return redirect('movie_detail', movie_pk=m.id)
 
 
@@ -117,7 +117,7 @@ def add_json_db(movie):
         add_relation(new_movie.actors, actors)
         add_relation(new_movie.country, countries)
         add_relation(new_movie.genres, genres)
-        return True
+        return new_movie
     else:
         return False
 
