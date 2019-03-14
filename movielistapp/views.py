@@ -72,7 +72,8 @@ def display_list(user, request):
         except ObjectDoesNotExist:
             context['movies'] = None
             context['genre'] = None
-    return render(request, 'main.html', context)
+
+    return render(request, 'my_list.html', context)
 
 def index(request):
     context = {}
