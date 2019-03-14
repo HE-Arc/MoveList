@@ -1,6 +1,6 @@
 import React from 'react';
 
-class ListMovie extends React.Component {
+export default class ListMovie extends React.Component {
     constructor(props)
     {
       super(props);
@@ -32,20 +32,23 @@ class ListMovie extends React.Component {
                         </div>
                         <div className="tile is-child">
                             <div className="tile">
-                                <div className="tile is-2 has-text-centered">
+                                <div className="tile is-2 has-text-centered is-vcentered column">
                                     <figure className="container image is-128x128">
                                         <img src={ movie.fields.poster_link } alt={ movie.fields.name } />
                                     </figure>
                                 </div>
                                 <div className="tile is-10 is-vertical is-parent">
-                                        <div className="tile is-child">
-                                            <span className="has-text-weight-bold">Genre </span>
-                                            <span>{this.createListGenres(movie.fields.genres)}</span>
-                                        </div>
-                                        <div className="tile is-child">
-                                            <span className="has-text-weight-bold">Note </span>
-                                            <span>{ movie.fields.note }</span>
-                                        </div>
+                                    <div className="tile is-child is-12 has-text-centered">
+                                        <h1 className="subtitle has-text-weight-bold">{ movie.fields.name }</h1>
+                                    </div>
+                                    <div className="tile is-child">
+                                        <span className="has-text-weight-bold">Genre </span>
+                                        <span>{this.createListGenres(movie.fields.genres)}</span>
+                                    </div>
+                                    <div className="tile is-child">
+                                        <span className="has-text-weight-bold">Note </span>
+                                        <span>{ movie.fields.note }</span>
+                                    </div>
                                     <div className="tile is-child">
                                         <h2 className="has-text-weight-bold">Plot</h2>
                                         <span>{ movie.fields.plot }</span>
@@ -75,6 +78,5 @@ class ListMovie extends React.Component {
                 </div>
             </section>
         );
-    }
+    }    
 }
-export default ListMovie;

@@ -122,7 +122,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = 'my_list'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
