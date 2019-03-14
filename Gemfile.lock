@@ -8,11 +8,10 @@ GEM
       i18n
       rake (>= 10.0.0)
       sshkit (>= 1.9.0)
-<<<<<<< HEAD
-=======
     capistrano-npm (1.0.3)
       capistrano (>= 3.0.0)
->>>>>>> master
+    capistrano-npm-build (2.0.2)
+      capistrano (>= 3.0.0)
     concurrent-ruby (1.1.4)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
@@ -29,13 +28,8 @@ PLATFORMS
 
 DEPENDENCIES
   capistrano
-<<<<<<< HEAD
-
-BUNDLED WITH
-   1.13.6
-=======
   capistrano-npm
+  capistrano-npm-build
 
 BUNDLED WITH
    2.0.1
->>>>>>> master
