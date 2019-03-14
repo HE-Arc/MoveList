@@ -13,13 +13,14 @@ import json
 from .models import Movie, ListMovie, Genre, State, Country
 
 
+
 def movie_detail(request, movie_pk):
     context = {}
     context['movie'] = Movie.objects.select_related('type', 'director').get(pk=movie_pk)
     context['states'] = serializers.serialize('json', State.objects.all())
 
     if request.user.is_authenticated:
-        try :
+        try:
             context['list_id'] = ListMovie.objects.get(movie=context['movie'], user=request.user).pk
         except ObjectDoesNotExist:
             context['list_id'] = json.dumps(None)
@@ -34,10 +35,12 @@ def add_movie_to_list(request, movie_pk):
     data = json.loads(request.body)
 
     try:
-        list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=State.objects.get(pk=data['state']), note=data['rating'])
-        return JsonResponse( {'listId': list_movie.pk}, status=200)
+        list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=State.objects.get(pk=data['state']),
+                                              note=data['rating'])
+        return JsonResponse({'listId': list_movie.pk}, status=200)
     except IntegrityError as e:
         return HttpResponseBadRequest()
+
 
 def remove_movie_from_list(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
@@ -48,6 +51,7 @@ def remove_movie_from_list(request, movie_pk):
         return HttpResponse(status=204)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
+
 
 def display_my_list(request):
     return display_list(request.user, request)
@@ -60,6 +64,7 @@ def display_user_list(request, user_pk):
         HttpResponseNotFound()
 
 def display_list(user, request):
+
     context = {}
     if user is not None:
         try:
@@ -76,12 +81,13 @@ def display_list(user, request):
             context['countries'] = None
     return render(request, 'my_list.html', context)
 
+
 def index(request):
     context = {}
     return render(request, 'index.html', context)
 
 
-class Search(View):
+class search(View):
     def get(self, request, title):
         m = Movie.objects.filter(name=title).first()
         if m is None:
@@ -90,7 +96,7 @@ class Search(View):
             f = r.json()
             m = add_json_db(f)
             return HttpResponse(f["Writer"])
-        return redirect('movie_detail', pk=m.id)
+        return redirect('movie_detail', movie_pk=m.id)
 
 
 def add_json_db(movie):
