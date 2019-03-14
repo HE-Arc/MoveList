@@ -67,5 +67,5 @@ set :application, "movielist"
 set :repo_url, "git@github.com:HE-Arc/MovieList.git"
 set :deploy_to, "/var/www/#{fetch(:application)}"
 
-set :npm_flags, '--production'    # default
+set :npm_flags, '' 
 set :build_command, 'npm start'
