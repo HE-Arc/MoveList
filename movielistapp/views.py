@@ -10,6 +10,7 @@ from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 import json
+from django.contrib.auth.decorators import login_required
 import requests, datetime
 from .models import Movie, ListMovie, Genre, State, Country
 
@@ -53,7 +54,7 @@ def remove_movie_from_list(request, movie_pk):
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
 
-
+@login_required
 def display_my_list(request):
     return display_list(request.user, request)
 
