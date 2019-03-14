@@ -34,16 +34,6 @@ namespace :python do
   end
 end
 
-after 'deploy:updating', 'npm:install'
-namespace :npm do
-  desc 'Npm run start'
-  task :run_start do
-    on roles([:app, :web]) do |h|
-      execute "npm run start"
-    end
-  end
-end
-
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 

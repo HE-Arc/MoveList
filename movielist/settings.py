@@ -24,7 +24,7 @@ SECRET_KEY = '0=yc1qj+-hvu+v753s9wak2x3ohl@km!x5cw6b8*5a-o#xr+^-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['movielist.srvz-webapp.he-arc.ch']
+ALLOWED_HOSTS = ['movielist.srvz-webapp.he-arc.ch', 'localhost', '127.0.0.1']
 
 # Application definition
 
