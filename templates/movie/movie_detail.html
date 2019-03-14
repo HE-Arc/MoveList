@@ -37,9 +37,8 @@
                 <h3 class="is-5 title">
                     Ratings
                 </h3>
-
                 <ul>
-                    {% for rating in ratings %}
+                    {% for rating in movie.ratings %}
                         <li>
                             <span class="has-text-weight-bold">{{ rating.Source }} : </span>
                             {{ rating.Value }}

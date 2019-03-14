@@ -16,10 +16,7 @@ from .models import Movie, ListMovie, Genre, State
 
 def movie_detail(request, movie_pk):
     context = {}
-    movie = Movie.objects.get(pk=movie_pk)
-    ratings = movie.ratings
-    context['ratings'] = ratings
-    context['movie'] = movie
+    context['movie'] = Movie.objects.get(pk=movie_pk)
     context['states'] = serializers.serialize('json', State.objects.all())
 
     if request.user.is_authenticated:
@@ -76,7 +73,7 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-class Search(View):
+class search(View):
     def get(self, request, title):
         m = Movie.objects.filter(name=title).first()
         if m is None:
@@ -85,7 +82,7 @@ class Search(View):
             f = r.json()
             m = add_json_db(f)
             return HttpResponse(f["Writer"])
-        return redirect('movie_detail', pk=m.id)
+        return redirect('movie_detail', movie_pk=m.id)
 
 
 def add_json_db(movie):
