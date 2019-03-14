@@ -66,3 +66,5 @@ server "movielist.srvz-webapp.he-arc.ch", user: "poweruser",
 set :application, "movielist"
 set :repo_url, "git@github.com:HE-Arc/MovieList.git"
 set :deploy_to, "/var/www/#{fetch(:application)}"
+
+set :npm_method, 'run start'
