@@ -13,7 +13,7 @@ export default class MainComponent extends React.Component {
         return (
             <div>
                 <Search />
-                <Filters genres={ this.props.genres } countries={ this.props.countries } />
+                <Filters genres={ this.props.genres } countrys={ this.props.countrys } />
                 <ListMovie  movies={ this.props.movies } genres={ this.props.genres } />
             </div>
         );

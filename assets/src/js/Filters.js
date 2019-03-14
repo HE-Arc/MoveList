@@ -5,6 +5,26 @@ export default class Filters extends React.Component {
     constructor(props)
     {
       super(props);
+      this.state = {
+        genres : JSON.parse(props.genres),
+        countrys : JSON.parse(props.countrys),
+      }
+    }
+
+    filterGenres()
+    {
+        if (this.state.genres.length > 0)
+        {
+            return <Filter name="Genres" filters={this.state.genres} />;
+        }
+    }
+
+    filterCountrys()
+    {
+        if (this.state.genres.length > 0)
+        {
+            return <Filter name="Countrys" filters={this.state.countrys} />;
+        }
     }
 
     render() {
@@ -12,8 +32,8 @@ export default class Filters extends React.Component {
             <section className="section">
                 <div className="container">
                     <nav className="level">
-                        <Filter name="Genres" filters={this.props.genres} />
-                        <Filter name="Countries" filters={this.props.countries} />
+                        {this.filterGenres()}
+                        {this.filterCountrys()}
                     </nav>
                 </div>
             </section>

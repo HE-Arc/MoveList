@@ -5,7 +5,7 @@ export default class Filter extends React.Component {
     {
       super(props);
       this.state = {
-          filters : JSON.parse(props.filters),
+          filters : props.filters,
           name : "filter-" + props.name
       }
     }

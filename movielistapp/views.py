@@ -69,11 +69,11 @@ def display_list(user, request):
 
             context['movies'] = serializers.serialize('json', movies)
             context['genres'] = serializers.serialize('json', list(Genre.objects.all()))
-            context['countries'] = serializers.serialize('json', list(Country.objects.all()))
+            context['countrys'] = serializers.serialize('json', list(Country.objects.all()))
         except ObjectDoesNotExist:
             context['movies'] = None
             context['genres'] = None
-            context['countries'] = None
+            context['countrys'] = None
     return render(request, 'my_list.html', context)
 
 def index(request):
