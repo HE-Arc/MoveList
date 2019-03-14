@@ -14,7 +14,7 @@ class Movie(models.Model):
     runtime = models.CharField(max_length=10)
     poster_link = models.CharField(max_length=200)
     ratings = JSONField()
-    plot = models.CharField(max_length=200)
+    plot = models.CharField(max_length=1000)
     awards = models.CharField(max_length=200, null=True)
     dvd = models.DateField(null=True)
     director = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='director')
