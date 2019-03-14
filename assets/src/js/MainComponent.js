@@ -1,9 +1,9 @@
 import React from 'react';
 import Search from './Search.js';
-import Filter from './Filter.js';
+import Filters from './Filters.js';
 import ListMovie from './ListMovie.js';
 
-class MainComponent extends React.Component {
+export default class MainComponent extends React.Component {
     constructor(props)
     {
       super(props);
@@ -13,11 +13,9 @@ class MainComponent extends React.Component {
         return (
             <div>
                 <Search />
-                <Filter />
+                <Filters genres={ this.props.genres } countries={ this.props.countries } />
                 <ListMovie  movies={ this.props.movies } genres={ this.props.genres } />
             </div>
         );
     }
 }
-
-export default MainComponent;

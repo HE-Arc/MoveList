@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 import json
-from .models import Movie, ListMovie, Genre, State
+from .models import Movie, ListMovie, Genre, State, Country
 
 def movie_detail(request, movie_pk):
     context = {}
@@ -54,9 +54,11 @@ def main(request):
                 movies.append(usermovie.movie)
             context['movies'] = serializers.serialize('json', list(movies))
             context['genres'] = serializers.serialize('json', list(Genre.objects.all()))
+            context['countries'] = serializers.serialize('json', list(Country.objects.all()))
         except ObjectDoesNotExist:
             context['movies'] = None
-            context['genre'] = None
+            context['genres'] = None
+            context['countries'] = None
     return render(request, 'main.html', context)
 
 def index(request):
