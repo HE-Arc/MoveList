@@ -25,18 +25,22 @@
           </div>
           <div id="navbarMenuHeroA" class="navbar-menu">
             <div class="navbar-end">
-              <a class="navbar-item" href="{% url 'index' %}">
+              {% url 'index' as index_url %}
+              <a href="{{ index_url }}" class="navbar-item {% if request.path == index_url %}is-active{% endif %}" >
                 Accueil
               </a>
               {% if not user.is_authenticated %}
-                <a href="{% url 'signup' as signup_url %}" class="navbar-item {% if request.path == signup_url %}is-active{% endif %}" >
+                {% url 'signup' as signup_url %}
+                <a href="{{ signup_url }}" class="navbar-item {% if request.path == signup_url %}is-active{% endif %}" >
                   Sign up
                 </a>
-                <a class="navbar-item" href="{% url 'login' %}">
+                {% url 'login' as login_url %}
+                <a href="{{ login_url }}" class="navbar-item {% if request.path == login_url %}is-active{% endif %}">
                   Connexion
                 </a>
               {% else %}
-                <a class="navbar-item" href="{% url 'my_list' %}">
+                {% url 'my_list' as my_list_url %}
+                <a href="{{ my_list_url }}" class="navbar-item {% if request.path == my_list_url %}is-active{% endif %}">
                   My List
                 </a>
                 <a class="navbar-item" href="{% url 'logout' %}">
@@ -59,9 +63,20 @@
     </div>
   </section>
 
-  <div class="container">
+  <div class="container" id="main-content">
     {% block content %}{% endblock %}
   </div>
+
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        <strong>MovieList</strong> - Bulloni Lucas, Jaggi Charles-Lewis, Mottier Fabien
+      </p>
+      <p>
+        &copy; HE-Arc - {% now 'Y' %}
+      </p>
+    </div>
+  </footer>
 
   {% render_bundle 'main' 'js' %}
 </body>
