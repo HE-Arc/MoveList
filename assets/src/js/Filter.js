@@ -9,7 +9,7 @@ class Filter extends React.Component {
 
     render() {
         return (
-            <section className="section">
+            <section>
                 <div className="container">
                     <nav className="level">
                         <div className="level-item has-text-centered">
@@ -143,6 +143,6 @@ class Filter extends React.Component {
                 </div>
             </section>
         );
-    }    
+    }
 }
 export default Filter;
