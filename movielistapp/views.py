@@ -17,14 +17,19 @@ from .models import Movie, ListMovie, Genre, State, Country
 
 def movie_detail(request, movie_pk):
     context = {}
+
     context['movie'] = Movie.objects.select_related('type', 'director').get(pk=movie_pk)
     context['states'] = serializers.serialize('json', State.objects.all())
 
     if request.user.is_authenticated:
         try:
-            context['list_id'] = ListMovie.objects.get(movie=context['movie'], user=request.user).pk
+            listEntry = ListMovie.objects.get(movie=context['movie'], user=request.user)
+            context['list_id'] = listEntry.pk
+            context['rating'] = listEntry.note
         except ObjectDoesNotExist:
-            context['list_id'] = json.dumps(None)
+            noneJson = json.dumps(None)
+            context['list_id'] = noneJson
+            context['rating'] = noneJson
 
     return render(request, 'movie/movie_detail.html', context)
 
@@ -39,6 +44,18 @@ def add_movie_to_list(request, movie_pk):
         list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=State.objects.get(pk=data['state']),
                                               note=data['rating'])
         return JsonResponse({'listId': list_movie.pk}, status=200)
+    except IntegrityError as e:
+        return HttpResponseBadRequest()
+
+def edit_movie_in_list(request, movie_pk):
+    movie = Movie.objects.get(pk=movie_pk)
+    current_user = request.user
+
+    data = json.loads(request.body)
+
+    try:
+        list_movie = ListMovie.objects.filter(user=current_user, movie=movie).update(state=State.objects.get(pk=data['state']), note=data['rating'])
+        return JsonResponse({'listId': movie_pk}, status=200)
     except IntegrityError as e:
         return HttpResponseBadRequest()
 
