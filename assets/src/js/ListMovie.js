@@ -4,10 +4,14 @@ export default class ListMovie extends React.Component {
     constructor(props)
     {
       super(props);
+      
+      this.state = {
+        movies: props.movies,
+      }
     }
 
     createListGenres(currentGenres) {
-        let genres = JSON.parse(this.props.genres);
+        let genres = this.props.data.genres;
         let listGenres = [];
 
         currentGenres.forEach(pk => {
@@ -22,9 +26,9 @@ export default class ListMovie extends React.Component {
     }
     createThumbnails() {
         let listThumbails = [];
-        if (this.props.movies != null && this.props.movies != undefined)
+        if (this.state.movies != null && this.state.movies != undefined)
         {
-            JSON.parse(this.props.movies).forEach(movie => {
+            this.state.movies.forEach(movie => {
                 listThumbails.push(
                     <div className="tile box is-parent is-vertical" key={ movie.pk }>
                         <div className="tile is-child is-12 has-text-centered">

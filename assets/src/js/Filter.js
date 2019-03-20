@@ -5,10 +5,9 @@ export default class Filter extends React.Component {
       super(props);
 
       this.state = {
-          filters : JSON.parse(JSON.stringify(props.filters)), // depth copy
           name : "filter-" + props.name
       }
-
+      
       this.handleFilterChange = this.handleFilterChange.bind(this);
     }
 
@@ -18,16 +17,7 @@ export default class Filter extends React.Component {
     }
 
     handleFilterChange(checkbox) {
-        let propsfilter = this.props.filters.filter(filter => filter.pk == checkbox.currentTarget.value)[0];
-        let stateIndex = this.state.filters.indexOf(this.state.filters.filter(filter => filter.pk == propsfilter.pk)[0]);
-
-        if (checkbox.currentTarget.checked) {
-            this.state.filters.push(propsfilter);
-        } else {
-            this.state.filters.splice(stateIndex,1);
-        }
-
-        this.props.onChange(this.props.id, this.state.filters);
+        this.props.onChange(this.props.id, checkbox.currentTarget.value, checkbox.currentTarget.checked);
     }
 
     render() {

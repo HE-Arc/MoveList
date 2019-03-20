@@ -70,10 +70,11 @@ def display_list(user, request):
             movies = list(map(lambda element : element.movie, usermovies))
 
             data['movies'] = serializers.serialize('json', movies)
-            data['genres'] = serializers.serialize('json', list(Genre.objects.all())
-            data['countrys'] = serializers.serialize('json', list(Country.objects.all())
+            data['genres'] = serializers.serialize('json', list(Genre.objects.all()))
+            data['countrys'] = serializers.serialize('json', list(Country.objects.all()))
             
-            context['data'] = json.dump(data)
+            context['data'] = json.dumps(data)
+
         except ObjectDoesNotExist:
             context['data'] = None
     return render(request, 'my_list.html', context)

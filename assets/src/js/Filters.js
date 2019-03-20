@@ -5,22 +5,19 @@ export default class Filters extends React.Component {
     constructor(props)
     {
       super(props);
-      this.state = {
-        dataFiltred : props.dataFiltred,
-      }
-      console.log(typeof(this.props.data.genres));
-      this.handleFilterChange = this.handleFilterChange.bind(this);
+ 
+      this.handleFiltersChange = this.handleFiltersChange.bind(this);
     }
 
-    handleFilterChange(filter, value) {
-        // this.state[filter] = value; 
+    handleFiltersChange(filter, value, checked) {
+        this.props.onChange(filter, value, checked);
     }
 
     filterGenres()
     {
         if (this.props.data.genres.length > 0)
         {
-            return <Filter onChange={this.handleFilterChange} id="genresFiltred" name="Genres" filters={this.props.data.genres} dataFiltred={this.props.dataFiltred} />;
+            return <Filter onChange={this.handleFiltersChange} id="genres" name="Genres" filters={this.props.data.genres} />;
         }
     }
 
@@ -28,7 +25,7 @@ export default class Filters extends React.Component {
     {
         if (this.props.data.countrys.length > 0)
         {
-            return <Filter  onChange={this.handleFilterChange} id="countrysFiltred" name="Countrys" filters={this.props.data.countrys} dataFiltred={this.props.dataFiltred} />;
+            return <Filter  onChange={this.handleFiltersChange} id="countrys" name="Countrys" filters={this.props.data.countrys} dataFiltred={this.props.dataFiltred} />;
         }
     }
 
