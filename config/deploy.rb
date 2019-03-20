@@ -34,7 +34,7 @@ namespace :python do
   end
 end
 
-after 'deploy:updated', 'django:migrate'
+# after 'deploy:updated', 'django:migrate' # problem with deployment
 after 'deploy:updated', 'django:collect_static'
 
 namespace :django do
@@ -43,12 +43,12 @@ namespace :django do
     File.join(shared_path, 'venv')
   end
 
-  desc 'Migrate database'
-  task :migrate do
-    on roles([:app, :web]) do |h|
-      execute "#{venv_path}/bin/python #{release_path}/manage.py migrate"
-    end
-  end
+  # desc 'Migrate database'
+  # task :migrate do
+  #   on roles([:app, :web]) do |h|
+  #     execute "#{venv_path}/bin/python #{release_path}/manage.py migrate"
+  #   end
+  # end
 
   desc 'Collect static files'
   task :collect_static do
