@@ -46,14 +46,14 @@ namespace :django do
   desc 'Migrate database'
   task :migrate do
     on roles([:app, :web]) do |h|
-      execute "#{venv_path}/bin/python #{release_path}/PayPixPlace/manage.py migrate"
+      execute "#{venv_path}/bin/python #{release_path}/manage.py migrate"
     end
   end
 
   desc 'Collect static files'
   task :collect_static do
     on roles([:app, :web]) do |h|
-      execute "#{venv_path}/bin/python #{release_path}/PayPixPlace/manage.py collectstatic --noinput"
+      execute "#{venv_path}/bin/python #{release_path}/manage.py collectstatic --noinput"
     end
   end
 end
