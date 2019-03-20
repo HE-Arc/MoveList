@@ -3,8 +3,9 @@ import React from 'react';
 class Search extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {value: ''};
-
+        this.state = {
+            value: ''
+        };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -15,7 +16,7 @@ class Search extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        window.location.href = `../movie/search/${this.state.value}`;
+        window.location.href = `../../movie/search/${this.state.value}`;
     }
 
     render() {

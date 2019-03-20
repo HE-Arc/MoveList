@@ -3,5 +3,15 @@
 {% block title %}My List{% endblock %}
 
 {% block content %}
-  <div id="MainComponent" class="react-component" data-movies="{{ movies }}" data-genres="{{ genres }}" data-countries="{{ countries }}"></div>
+    {% if error %}
+        <div class="section">
+            <div class="container">
+                <div class="notification is-black">
+                    Sorry, Movie not found !!
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div id="MainComponent" class="react-component" data-movies="{{ movies }}" data-genres="{{ genres }}"
+         data-countries="{{ countries }}"></div>
 {% endblock %}
