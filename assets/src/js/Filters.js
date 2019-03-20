@@ -6,24 +6,29 @@ export default class Filters extends React.Component {
     {
       super(props);
       this.state = {
-        genres : JSON.parse(props.genres),
-        countrys : JSON.parse(props.countrys),
+        dataFiltred : props.dataFiltred,
       }
+      console.log(typeof(this.props.data.genres));
+      this.handleFilterChange = this.handleFilterChange.bind(this);
+    }
+
+    handleFilterChange(filter, value) {
+        // this.state[filter] = value; 
     }
 
     filterGenres()
     {
-        if (this.state.genres.length > 0)
+        if (this.props.data.genres.length > 0)
         {
-            return <Filter name="Genres" filters={this.state.genres} />;
+            return <Filter onChange={this.handleFilterChange} id="genresFiltred" name="Genres" filters={this.props.data.genres} dataFiltred={this.props.dataFiltred} />;
         }
     }
 
     filterCountrys()
     {
-        if (this.state.genres.length > 0)
+        if (this.props.data.countrys.length > 0)
         {
-            return <Filter name="Countrys" filters={this.state.countrys} />;
+            return <Filter  onChange={this.handleFilterChange} id="countrysFiltred" name="Countrys" filters={this.props.data.countrys} dataFiltred={this.props.dataFiltred} />;
         }
     }
 

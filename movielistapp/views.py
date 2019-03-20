@@ -64,16 +64,18 @@ def display_list(user, request):
     if user is not None:
         try:
             movies = []
+            data = {}
+
             usermovies = ListMovie.objects.select_related('movie').filter(user=user.pk)
             movies = list(map(lambda element : element.movie, usermovies))
 
-            context['movies'] = serializers.serialize('json', movies)
-            context['genres'] = serializers.serialize('json', list(Genre.objects.all()))
-            context['countrys'] = serializers.serialize('json', list(Country.objects.all()))
+            data['movies'] = serializers.serialize('json', movies)
+            data['genres'] = serializers.serialize('json', list(Genre.objects.all())
+            data['countrys'] = serializers.serialize('json', list(Country.objects.all())
+            
+            context['data'] = json.dump(data)
         except ObjectDoesNotExist:
-            context['movies'] = None
-            context['genres'] = None
-            context['countrys'] = None
+            context['data'] = None
     return render(request, 'my_list.html', context)
 
 def index(request):
