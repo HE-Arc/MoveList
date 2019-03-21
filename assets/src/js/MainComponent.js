@@ -12,24 +12,53 @@ export default class MainComponent extends React.Component {
 
         let data = {};
         data.movies = JSON.parse(jsonData.movies);
+        data.states = JSON.parse(jsonData.states);
+        data.types = JSON.parse(jsonData.types);
         data.genres = JSON.parse(jsonData.genres);
-        data.countrys = JSON.parse(jsonData.countrys);
-
+        data.people = JSON.parse(jsonData.people);
+        
         this.state = {
             data : data,
-            moviesFiltred : JSON.parse(jsonData.movies), // depthcopy
+            usermovies : JSON.parse(jsonData.usermovies),
+            moviesFiltred : JSON.parse(jsonData.movies),
         }
-      
+        
         this.handleFiltersChange = this.handleFiltersChange.bind(this);
         this.listMovie = React.createRef();
     }
 
-    handleFiltersChange(filter, value, checked) {
+    handleFiltersChange(filter, value, checked, type) {
 
         if (checked) {
-            this.state.moviesFiltred = this.state.data.movies.filter( movie => this.state.moviesFiltred.indexOf(movie) || movie.fields[filter].indexOf(parseInt(value)) >= 0);
+            switch (type) {
+                case "state":
+                this.state.moviesFiltred = this.state.data.movies.filter( movie => this.state.moviesFiltred.filter(movieFiltred => movieFiltred.pk == movie.pk).length > 0 || (this.state.moviesFiltred.indexOf(movie) < 0 && this.state.usermovies.filter(usermovie => usermovie.fields.movie == movie.pk)[0].fields[filter] == parseInt(value)));
+                    break;
+                case "list":
+                this.state.moviesFiltred = this.state.data.movies.filter(movie => this.state.moviesFiltred.filter(movieFiltred => movieFiltred.pk == movie.pk).length > 0 || movie.fields[filter].indexOf(parseInt(value)) >= 0);
+                    break;
+                case "number":
+                    this.state.moviesFiltred = this.state.data.movies.filter(movie => this.state.moviesFiltred.filter(movieFiltred => movieFiltred.pk == movie.pk).length > 0 || movie.fields[filter] == parseInt(value));
+                        break;
+                case "string":
+                    this.state.moviesFiltred = this.state.data.movies.filter(movie => this.state.moviesFiltred.filter(movieFiltred => movieFiltred.pk == movie.pk).length > 0 || movie.fields[filter] == value);
+                        break;
+            }
         } else {
-            this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => movie.fields[filter].indexOf(parseInt(value)) < 0);
+            switch (type) {
+                case "state":
+                this.state.moviesFiltred = this.state.moviesFiltred.filter( movie => this.state.usermovies.filter(usermovie => usermovie.fields.movie == movie.pk)[0].fields[filter] != parseInt(value));
+                    break;
+                case "list":
+                    this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => movie.fields[filter].indexOf(parseInt(value)) < 0);
+                    break;
+                case "number":
+                    this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => movie.fields[filter] != parseInt(value));
+                    break;
+                case "string":
+                    this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => movie.fields[filter] != value);
+                    break;
+            }
         }
         
         this.listMovie.current.state.movies = this.state.moviesFiltred;

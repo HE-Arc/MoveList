@@ -10,8 +10,7 @@ from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 import json
-from .models import Movie, ListMovie, Genre, State, Country
-
+from .models import Movie, ListMovie, Genre, State, Country, Type, Person
 
 def movie_detail(request, movie_pk):
     context = {}
@@ -67,12 +66,14 @@ def display_list(user, request):
             data = {}
 
             usermovies = ListMovie.objects.select_related('movie').filter(user=user.pk)
-            movies = list(map(lambda element : element.movie, usermovies))
 
-            data['movies'] = serializers.serialize('json', movies)
+            data['usermovies'] = serializers.serialize('json', usermovies)
+            data['movies'] = serializers.serialize('json', list(map(lambda element : element.movie, usermovies)))
+            data['states'] = serializers.serialize('json', list(map(lambda element : element.state, usermovies)))
+            data['types'] = serializers.serialize('json', list(Type.objects.all()))
             data['genres'] = serializers.serialize('json', list(Genre.objects.all()))
-            data['countrys'] = serializers.serialize('json', list(Country.objects.all()))
-            
+            data['people'] = serializers.serialize('json', list(Person.objects.all()))
+
             context['data'] = json.dumps(data)
 
         except ObjectDoesNotExist:

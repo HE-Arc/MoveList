@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class Filter extends React.Component {
+export default class FilterRuntime extends React.Component {
     constructor(props) {
       super(props);
 
@@ -8,7 +8,7 @@ export default class Filter extends React.Component {
           name : "filter-" + props.name
       }
       
-      this.handleFilterChange = this.handleFilterChange.bind(this);
+      this.handleFilterRuntimeChange = this.handleFilterRuntimeChange.bind(this);
     }
 
     toggleActivation(e) {
@@ -16,8 +16,9 @@ export default class Filter extends React.Component {
         node.classList.toggle('is-active');
     }
 
-    handleFilterChange(checkbox) {
-        this.props.onChange(this.props.id, checkbox.currentTarget.value, checkbox.currentTarget.checked, this.props.type);
+    handleFilterRuntimeChange(inputNumber) {
+        console.log(inputNumber);
+        //this.props.onChange(this.props.id, checkbox.currentTarget.value, checkbox.currentTarget.checked, this.props.type);
     }
 
     render() {
@@ -43,18 +44,23 @@ export default class Filter extends React.Component {
                             </div>
                             <div className="dropdown-menu" id="dropdown-menu" role="menu">
                                 <div className="dropdown-content">
-                                    { this.props.filters.map((filter) => {
-                                        let filterName = this.props.name + filter.pk;
-                                        let keyItem = "filterItem" + filter.pk;
-                                        let keyInput = "filterInput" + filter.pk;
-                                        let keyLabel = "filterLabel" + filter.pk;
-                                        
-                                        return <div className="dropdown-item"  key={keyItem}>
-                                                <input className="is-checkradio" id={filterName} value={filter.pk} onChange={this.handleFilterChange} key={keyInput} type="checkbox" name={filter.fields.name} defaultChecked />
-                                                <label htmlFor={filterName} key={keyLabel} >{filter.fields.name}</label>
+                                    <div className="dropdown-item">
+                                        <div class="field">
+                                            <label class="label">Min</label>
+                                            <div class="control">
+                                                <input className="input is-small"  id="runtimeMin" onChange={this.handleFilterChange} type="number" name="runtimeMin" />
                                             </div>
-                                        })
-                                    }
+                                        </div>
+                                    </div>
+                                    <div className="is-divider" id="search-divider"></div>
+                                    <div className="dropdown-item">
+                                        <div  class="field">
+                                            <label class="label">Max</label>
+                                            <div class="control">
+                                                <input className="input is-small"  id="runtimeMax" onChange={this.handleFilterChange} type="number" name="runtimeMax" />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
