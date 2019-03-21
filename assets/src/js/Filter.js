@@ -48,7 +48,7 @@ export default class Filter extends React.Component {
                                         let keyItem = "filterItem" + filter.pk;
                                         let keyInput = "filterInput" + filter.pk;
                                         let keyLabel = "filterLabel" + filter.pk;
-                                        
+
                                         return <div className="dropdown-item"  key={keyItem}>
                                                 <input className="is-checkradio" id={filterName} value={filter.pk} onChange={this.handleFilterChange} key={keyInput} type="checkbox" name={filter.fields.name} defaultChecked />
                                                 <label htmlFor={filterName} key={keyLabel} >{filter.fields.name}</label>
@@ -69,5 +69,5 @@ export default class Filter extends React.Component {
                 </div>
             </div>
         );
-    }    
+    }
 }

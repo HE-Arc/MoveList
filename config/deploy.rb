@@ -34,6 +34,30 @@ namespace :python do
   end
 end
 
+# after 'deploy:updated', 'django:migrate' # problem with deployment
+after 'deploy:updated', 'django:collect_static'
+
+namespace :django do
+
+  def venv_path
+    File.join(shared_path, 'venv')
+  end
+
+  # desc 'Migrate database'
+  # task :migrate do
+  #   on roles([:app, :web]) do |h|
+  #     execute "#{venv_path}/bin/python #{release_path}/manage.py migrate"
+  #   end
+  # end
+
+  desc 'Collect static files'
+  task :collect_static do
+    on roles([:app, :web]) do |h|
+      execute "#{venv_path}/bin/python #{release_path}/manage.py collectstatic --noinput"
+    end
+  end
+end
+
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 

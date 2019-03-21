@@ -10,18 +10,24 @@ from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 import json
+import requests, datetime
 from .models import Movie, ListMovie, Genre, State, Country, Type, Person
 
 def movie_detail(request, movie_pk):
     context = {}
+
     context['movie'] = Movie.objects.select_related('type', 'director').get(pk=movie_pk)
     context['states'] = serializers.serialize('json', State.objects.all())
 
     if request.user.is_authenticated:
-        try :
-            context['list_id'] = ListMovie.objects.get(movie=context['movie'], user=request.user).pk
+        try:
+            listEntry = ListMovie.objects.get(movie=context['movie'], user=request.user)
+            context['list_id'] = listEntry.pk
+            context['rating'] = listEntry.note
         except ObjectDoesNotExist:
-            context['list_id'] = json.dumps(None)
+            noneJson = json.dumps(None)
+            context['list_id'] = noneJson
+            context['rating'] = noneJson
 
     return render(request, 'movie/movie_detail.html', context)
 
@@ -33,10 +39,24 @@ def add_movie_to_list(request, movie_pk):
     data = json.loads(request.body)
 
     try:
-        list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=State.objects.get(pk=data['state']), note=data['rating'])
-        return JsonResponse( {'listId': list_movie.pk}, status=200)
+        list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=State.objects.get(pk=data['state']),
+                                              note=data['rating'])
+        return JsonResponse({'listId': list_movie.pk}, status=200)
     except IntegrityError as e:
         return HttpResponseBadRequest()
+
+def edit_movie_in_list(request, movie_pk):
+    movie = Movie.objects.get(pk=movie_pk)
+    current_user = request.user
+
+    data = json.loads(request.body)
+
+    try:
+        list_movie = ListMovie.objects.filter(user=current_user, movie=movie).update(state=State.objects.get(pk=data['state']), note=data['rating'])
+        return JsonResponse({'listId': movie_pk}, status=200)
+    except IntegrityError as e:
+        return HttpResponseBadRequest()
+
 
 def remove_movie_from_list(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
@@ -47,6 +67,7 @@ def remove_movie_from_list(request, movie_pk):
         return HttpResponse(status=204)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
+
 
 def display_my_list(request):
     return display_list(request.user, request)
@@ -59,6 +80,7 @@ def display_user_list(request, user_pk):
         HttpResponseNotFound()
 
 def display_list(user, request):
+
     context = {}
     if user is not None:
         try:
@@ -80,12 +102,13 @@ def display_list(user, request):
             context['data'] = None
     return render(request, 'my_list.html', context)
 
+
 def index(request):
     context = {}
     return render(request, 'index.html', context)
 
 
-class Search(View):
+class search(View):
     def get(self, request, title):
         m = Movie.objects.filter(name=title).first()
         if m is None:
@@ -93,8 +116,7 @@ class Search(View):
             r = requests.get(api_request)
             f = r.json()
             m = add_json_db(f)
-            return HttpResponse(f["Writer"])
-        return redirect('movie_detail', pk=m.id)
+        return redirect('movie_detail', movie_pk=m.id)
 
 
 def add_json_db(movie):
@@ -115,7 +137,7 @@ def add_json_db(movie):
         add_relation(new_movie.actors, actors)
         add_relation(new_movie.country, countries)
         add_relation(new_movie.genres, genres)
-        return True
+        return new_movie
     else:
         return False
 

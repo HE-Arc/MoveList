@@ -71,7 +71,7 @@ export default class ListMovie extends React.Component {
                     <div className="tile is-ancestor is-vertical">
                         <div className="tile is-parent">
                             <div className="tile is-child">
-                                <h1 className="title">Recherche de film</h1>
+                                <h1 className="title">Liste de film</h1>
                             </div>
                         </div>
                         {this.createThumbnails()}
