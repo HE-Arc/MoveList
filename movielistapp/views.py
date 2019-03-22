@@ -124,16 +124,19 @@ def add_json_db(movie):
         countries = many_get_or_add_in_db(movie['Country'], Country)
         type_movie = get_or_add_in_db(movie['Type'], Type)
         writer = many_get_or_add_in_db(movie['Writer'], Person)
-        new_movie = Movie.objects.create(imdbID=movie['imdbID'], name=movie['Title'],
-                                         year=movie['Year'], released=format_date(movie['Released']),
-                                         runtime=movie['Runtime'], poster_link=movie['Poster'],
-                                         ratings=movie['Ratings'], plot=movie['Plot'],
-                                         awards=movie['Awards'], dvd=format_date(movie['DVD']), director=director,
-                                         type=type_movie)
-        add_relation(new_movie.scenarist, writer)
-        add_relation(new_movie.actors, actors)
-        add_relation(new_movie.country, countries)
-        add_relation(new_movie.genres, genres)
+        new_movie_info = Movie.objects.get_or_create(imdbID=movie['imdbID'], name=movie['Title'],
+                                                     year=movie['Year'], released=format_date(movie['Released']),
+                                                     runtime=movie['Runtime'], poster_link=movie['Poster'],
+                                                     ratings=movie['Ratings'], plot=movie['Plot'],
+                                                     awards=movie['Awards'], dvd=format_date(movie['DVD']),
+                                                     director=director,
+                                                     type=type_movie)
+        new_movie, is_created = new_movie_info
+        if is_created:
+            add_relation(new_movie.scenarist, writer)
+            add_relation(new_movie.actors, actors)
+            add_relation(new_movie.country, countries)
+            add_relation(new_movie.genres, genres)
         return new_movie
 
 
