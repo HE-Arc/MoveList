@@ -72,9 +72,5 @@ class Search extends React.Component {
         );
     }
 }
-<<<<<<< HEAD:assets/src/js/ReactComponents/Search.js
-export default Search;
-=======
 
 export default Search;
->>>>>>> eb12c364af8b0007a2d070d6c97b5ac41c605a8f:assets/src/js/Search.js
