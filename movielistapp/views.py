@@ -101,7 +101,7 @@ def display_list(user, request):
             context['data'] = data
             print(data)
         except ObjectDoesNotExist:
-            context['hello'] = None
+            context['data'] = None
     return render(request, 'my_list.html', context)
 
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import CopyListUrl from './CopyListUrl.js';
 
 export default class ListMovie extends React.Component {
     constructor(props)
@@ -11,18 +12,10 @@ export default class ListMovie extends React.Component {
     }
 
     createListGenres(currentGenres) {
-        let genres = this.props.data.genres;
-        let listGenres = [];
+      let genres = this.props.data.genres;
+      let listGenres = genres.filter(genre => currentGenres.includes(genre.pk)).map(genre => genre.fields.name);
 
-        currentGenres.forEach(pk => {
-            if (listGenres.length > 0)
-            {
-                listGenres.push(', ');
-            }
-            listGenres.push(genres.filter( genre => genre.pk == pk)[0].fields.name);
-        });
-
-        return listGenres;
+      return listGenres.join(', ');
     }
     createThumbnails() {
         let listThumbails = [];
@@ -78,7 +71,14 @@ export default class ListMovie extends React.Component {
                     <div className="tile is-ancestor is-vertical">
                         <div className="tile is-parent">
                             <div className="tile is-child">
-                                <h1 className="title">List of {this.props.data.user.name}</h1>
+                              <div className="columns">
+                                <div className="column is-8">
+                                  <h1 className="title">List of {this.props.data.user.name}</h1>
+                                </div>
+                                <div className="column is-4">
+                                  <CopyListUrl userId={this.props.data.user.id} />
+                                </div>
+                              </div>
                             </div>
                         </div>
                         {this.createThumbnails()}
