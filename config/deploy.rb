@@ -34,7 +34,7 @@ namespace :python do
   end
 end
 
-# after 'deploy:updated', 'django:migrate' # problem with deployment
+#after 'deploy:updated', 'django:migrate' # problem with deployment
 after 'deploy:updated', 'django:collect_static'
 
 namespace :django do

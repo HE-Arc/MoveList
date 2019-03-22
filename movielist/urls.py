@@ -24,4 +24,4 @@ urlpatterns = [
     path('', include('movielistapp.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]# + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
