@@ -3,5 +3,9 @@
 {% block title %}My List{% endblock %}
 
 {% block content %}
-  <div id="MainComponent" class="react-component" data-data="{{ data }}"></div>
+  <div id="MainComponent" class="react-component"
+      {% for key, value in data.items %}
+          data-{{key}}="{{ value }}"
+      {% endfor %}
+  ></div>
 {% endblock %}
