@@ -48,6 +48,7 @@ def add_movie_to_list(request, movie_pk):
     except IntegrityError as e:
         return HttpResponseBadRequest()
 
+
 def edit_movie_in_list(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
     current_user = request.user
@@ -55,7 +56,8 @@ def edit_movie_in_list(request, movie_pk):
     data = json.loads(request.body)
 
     try:
-        list_movie = ListMovie.objects.filter(user=current_user, movie=movie).update(state=State.objects.get(pk=data['state']), note=data['rating'])
+        list_movie = ListMovie.objects.filter(user=current_user, movie=movie).update(
+            state=State.objects.get(pk=data['state']), note=data['rating'])
         return JsonResponse({'listId': movie_pk}, status=200)
     except IntegrityError as e:
         return HttpResponseBadRequest()
@@ -104,8 +106,8 @@ def display_list(user, request):
             usermovies = ListMovie.objects.select_related('movie').filter(user=user.pk)
 
             data['usermovies'] = serializers.serialize('json', usermovies)
-            data['movies'] = serializers.serialize('json', list(map(lambda element : element.movie, usermovies)))
-            data['states'] = serializers.serialize('json', list(map(lambda element : element.state, usermovies)))
+            data['movies'] = serializers.serialize('json', list(map(lambda element: element.movie, usermovies)))
+            data['states'] = serializers.serialize('json', list(map(lambda element: element.state, usermovies)))
             data['types'] = serializers.serialize('json', list(Type.objects.all()))
             data['genres'] = serializers.serialize('json', list(Genre.objects.all()))
             data['people'] = serializers.serialize('json', list(Person.objects.all()))
@@ -123,10 +125,21 @@ def index(request):
 
 
 class search(View):
-    def get(self, request, title):
-        m = Movie.objects.filter(name=title).first()
+    def get(self, request):
+        try:
+            title = request.GET['title']
+        except:
+            return redirect('index')
+        try:
+            year = int(request.GET['year'])
+        except:
+            year = None
+
+        m = Movie.objects.filter(name=title).first() if year is None else Movie.objects.filter(name=title,
+                                                                                               year=year).first()
         if m is None:
-            api_request = f'http://www.omdbapi.com/?t={title}&apikey=f625944d'
+            api_request = f'http://www.omdbapi.com/?t={title}&apikey=f625944d' if year is None \
+                else f'http://www.omdbapi.com/?t={title}&y={year}&apikey=f625944d'
             r = requests.get(api_request)
             f = r.json()
             if is_in_api(f):

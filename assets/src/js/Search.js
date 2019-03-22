@@ -4,19 +4,30 @@ class Search extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: ''
+            title: '',
+            year: ''
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleChangeYear = this.handleChangeYear.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange(event) {
-        this.setState({value: event.target.value});
+        this.setState({title: event.target.value});
+    }
+
+    handleChangeYear(event) {
+        this.setState({year: event.target.value});
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        window.location.href = `../../movie/search/${this.state.value}`;
+        if (this.state.title !== '' && this.state.year !== '') {
+            window.location.href = `../../movie/search?title=${this.state.title}&year=${this.state.year}`;
+        }else if(this.state.title !== ''){
+            window.location.href = `../../movie/search?title=${this.state.title}`;
+        }
+
     }
 
     render() {
@@ -29,11 +40,12 @@ class Search extends React.Component {
                             <div className="field is-grouped">
 
                                 <div className="control is-expanded">
-                                    <input className="input" type="text" value={this.state.value}
+                                    <input className="input" type="text" value={this.state.title}
                                            onChange={this.handleChange} placeholder="Titre"/>
                                 </div>
                                 <div className="control">
-                                    <input className="input" type="text" placeholder="Année"/>
+                                    <input className="input" type="text" value={this.state.year}
+                                           onChange={this.handleChangeYear} placeholder="Année"/>
                                 </div>
                                 <div className="control">
                                     <button type="submit" className="button is-info">
