@@ -4,7 +4,7 @@ export default class ListMovie extends React.Component {
     constructor(props)
     {
       super(props);
-      
+
       this.state = {
         movies: props.movies,
       }
@@ -26,7 +26,7 @@ export default class ListMovie extends React.Component {
     }
     createThumbnails() {
         let listThumbails = [];
-        if (this.state.movies != null && this.state.movies != undefined)
+        if (this.state.movies !== null && this.state.movies !== undefined)
         {
             this.state.movies.forEach(movie => {
                 listThumbails.push(
@@ -60,6 +60,13 @@ export default class ListMovie extends React.Component {
                     </div>
                 );
             });
+
+            if(listThumbails.length === 0)
+            {
+              return <div className="notification is-warning">There are no movies in this list</div>
+
+            }
+
             return listThumbails;
         }
     }
@@ -71,7 +78,7 @@ export default class ListMovie extends React.Component {
                     <div className="tile is-ancestor is-vertical">
                         <div className="tile is-parent">
                             <div className="tile is-child">
-                                <h1 className="title">Liste de film</h1>
+                                <h1 className="title">List of {this.props.data.user.name}</h1>
                             </div>
                         </div>
                         {this.createThumbnails()}
@@ -79,5 +86,5 @@ export default class ListMovie extends React.Component {
                 </div>
             </section>
         );
-    }    
+    }
 }

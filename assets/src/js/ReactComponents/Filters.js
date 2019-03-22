@@ -1,6 +1,6 @@
 import React from 'react';
-import Filter from './ReactComponents/Filter.js';
-import FilterRuntime from './ReactComponents/FilterRuntime.js';
+import Filter from './Filter.js';
+import FilterRuntime from './FilterRuntime.js';
 
 export default class Filters extends React.Component {
     constructor(props)
@@ -72,7 +72,8 @@ export default class Filters extends React.Component {
 
     render() {
         return (
-            <section className="section">
+            <section className="section filters">
+                <h3 className="title">Filters</h3>
                 <div className="container">
                     <nav className="level">
                         {this.filterState()}

@@ -1,7 +1,7 @@
 import React from 'react';
-import Search from './ReactComponents/Search.js';
-import Filters from './ReactComponents/Filters.js';
-import ListMovie from './ReactComponents/ListMovie.js';
+import Search from './Search.js';
+import Filters from './Filters.js';
+import ListMovie from './MovieList/ListMovie.js';
 
 export default class MainComponent extends React.Component {
     constructor(props)
@@ -16,7 +16,7 @@ export default class MainComponent extends React.Component {
             types : JSON.parse(props.types),
             genres : JSON.parse(props.genres),
             people : JSON.parse(props.people),
-            user : {name: props.username, id: props.user_id}
+            user : {name: props.user, id: props.user_id}
         }
 
         this.handleFiltersChange = this.handleFiltersChange.bind(this);
