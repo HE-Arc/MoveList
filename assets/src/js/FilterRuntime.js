@@ -45,18 +45,18 @@ export default class FilterRuntime extends React.Component {
                             <div className="dropdown-menu" id="dropdown-menu" role="menu">
                                 <div className="dropdown-content">
                                     <div className="dropdown-item">
-                                        <div class="field">
-                                            <label class="label">Min</label>
-                                            <div class="control">
+                                        <div className="field">
+                                            <label className="label">Min</label>
+                                            <div className="control">
                                                 <input className="input is-small"  id="runtimeMin" onChange={this.handleFilterChange} type="number" name="runtimeMin" />
                                             </div>
                                         </div>
                                     </div>
                                     <div className="is-divider" id="search-divider"></div>
                                     <div className="dropdown-item">
-                                        <div  class="field">
-                                            <label class="label">Max</label>
-                                            <div class="control">
+                                        <div  className="field">
+                                            <label className="label">Max</label>
+                                            <div className="control">
                                                 <input className="input is-small"  id="runtimeMax" onChange={this.handleFilterChange} type="number" name="runtimeMax" />
                                             </div>
                                         </div>

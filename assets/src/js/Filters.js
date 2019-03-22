@@ -10,8 +10,8 @@ export default class Filters extends React.Component {
       this.handleFiltersChange = this.handleFiltersChange.bind(this);
     }
 
-    handleFiltersChange(filter, value, checked, type) {
-        this.props.onChange(filter, value, checked, type);
+    handleFiltersChange(filter, value, checked, type, nbChecked, previousNbChecked) {
+        this.props.onChange(filter, value, checked, type, nbChecked, previousNbChecked);
     }
 
     filterState()
