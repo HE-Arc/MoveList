@@ -3,15 +3,18 @@ from django.http import HttpResponse
 from django.views import generic, View
 from django.db import models
 from .models import Movie, Person, Genre, Country, Type
-from django.urls import reverse_lazy
+from django.urls import reverse
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse, HttpResponseRedirect
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
-import json
+import json, urllib
+from django.contrib.auth.decorators import login_required
 import requests, datetime
+
 from .models import Movie, ListMovie, Genre, State, Country, Type, Person
+
 
 def movie_detail(request, movie_pk):
     context = {}
@@ -69,8 +72,10 @@ def remove_movie_from_list(request, movie_pk):
         return HttpResponseNotFound()
 
 
+@login_required
 def display_my_list(request):
     return display_list(request.user, request)
+
 
 def display_user_list(request, user_pk):
     try:
@@ -79,9 +84,18 @@ def display_user_list(request, user_pk):
     except ObjectDoesNotExist:
         HttpResponseNotFound()
 
-def display_list(user, request):
 
+def display_list(user, request):
     context = {}
+    context['error'] = False
+    try:
+        error = request.GET['error']
+        if error is not None and error == '1':
+            context['error'] = True
+
+    except:
+        pass
+
     if user is not None:
         try:
             movies = []
@@ -115,8 +129,14 @@ class search(View):
             api_request = f'http://www.omdbapi.com/?t={title}&apikey=f625944d'
             r = requests.get(api_request)
             f = r.json()
-            m = add_json_db(f)
-        return redirect('movie_detail', movie_pk=m.id)
+            if is_in_api(f):
+                m = add_json_db(f)
+                return redirect('movie_detail', movie_pk=m.id)
+            else:
+                url = reverse('display_user_list', kwargs={'user_pk': request.user.id})
+                return HttpResponseRedirect(url + "?%error=1")
+        else:
+            return redirect('movie_detail', movie_pk=m.id)
 
 
 def add_json_db(movie):
@@ -127,19 +147,20 @@ def add_json_db(movie):
         countries = many_get_or_add_in_db(movie['Country'], Country)
         type_movie = get_or_add_in_db(movie['Type'], Type)
         writer = many_get_or_add_in_db(movie['Writer'], Person)
-        new_movie = Movie.objects.create(imdbID=movie['imdbID'], name=movie['Title'],
-                                         year=movie['Year'], released=format_date(movie['Released']),
-                                         runtime=155, poster_link=movie['Poster'],
-                                         ratings=movie['Ratings'], plot=movie['Plot'],
-                                         awards=movie['Awards'], dvd=format_date(movie['DVD']), director=director,
-                                         type=type_movie)
-        add_relation(new_movie.scenarist, writer)
-        add_relation(new_movie.actors, actors)
-        add_relation(new_movie.country, countries)
-        add_relation(new_movie.genres, genres)
+        new_movie_info = Movie.objects.get_or_create(imdbID=movie['imdbID'], name=movie['Title'],
+                                                     year=movie['Year'], released=format_date(movie['Released']),
+                                                     runtime=movie['Runtime'], poster_link=movie['Poster'],
+                                                     ratings=movie['Ratings'], plot=movie['Plot'],
+                                                     awards=movie['Awards'], dvd=format_date(movie['DVD']),
+                                                     director=director,
+                                                     type=type_movie)
+        new_movie, is_created = new_movie_info
+        if is_created:
+            add_relation(new_movie.scenarist, writer)
+            add_relation(new_movie.actors, actors)
+            add_relation(new_movie.country, countries)
+            add_relation(new_movie.genres, genres)
         return new_movie
-    else:
-        return False
 
 
 def many_get_or_add_in_db(str_data, model: models.Model):
@@ -160,4 +181,12 @@ def add_relation(movie, datas):
 
 
 def format_date(date):
+    if date == 'N/A':
+        return None
     return datetime.datetime.strptime(date, '%d %b %Y').strftime('%Y-%m-%d')
+
+
+def is_in_api(movie):
+    if movie["Response"] == 'True':
+        return True
+    return False

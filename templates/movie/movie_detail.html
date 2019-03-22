@@ -64,7 +64,11 @@
                 <div class="column">
                     <h3 class="is-4 subtitle">DVD Release</h3>
                     <p>
-                        {{ movie.dvd | date }}
+                        {% if movie.dvd is None %}
+                            N/A
+                        {% else %}
+                            {{ movie.dvd | date }}
+                        {% endif %}
                     </p>
                 </div>
 
@@ -78,7 +82,7 @@
                 <div class="column">
                     <h3 class="is-4 subtitle">Runtime</h3>
                     <p>
-                        {{ movie.runtime }} min
+                        {{ movie.runtime }}
                     </p>
                 </div>
             </div>
