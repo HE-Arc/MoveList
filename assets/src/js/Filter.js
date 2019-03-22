@@ -5,7 +5,9 @@ export default class Filter extends React.Component {
       super(props);
 
       this.state = {
-          name : "filter-" + props.name
+          name : "filter-" + props.name,
+          filterClass : "checkbox" + this.props.name,
+          nbChecked : 0
       }
       
       this.handleFilterChange = this.handleFilterChange.bind(this);
@@ -17,7 +19,19 @@ export default class Filter extends React.Component {
     }
 
     handleFilterChange(checkbox) {
-        this.props.onChange(this.props.id, checkbox.currentTarget.value, checkbox.currentTarget.checked, this.props.type);
+        let previousNbChecked = this.state.nbChecked;
+        
+        let checkboxes = document.getElementsByClassName(this.state.filterClass);
+
+        let nbChecked = 0;
+        Array.prototype.forEach.call(checkboxes, function(chkbox) {
+            if (chkbox.checked == true) {
+                nbChecked++;
+            }
+        });
+        
+        this.state.nbChecked = nbChecked;
+        this.props.onChange(this.props.id, checkbox.currentTarget.value, checkbox.currentTarget.checked, this.props.type, nbChecked, previousNbChecked);
     }
 
     render() {
@@ -48,9 +62,9 @@ export default class Filter extends React.Component {
                                         let keyItem = "filterItem" + filter.pk;
                                         let keyInput = "filterInput" + filter.pk;
                                         let keyLabel = "filterLabel" + filter.pk;
-
+                                        let filterClass = "is-checkradio checkbox" + this.props.name;
                                         return <div className="dropdown-item"  key={keyItem}>
-                                                <input className="is-checkradio" id={filterName} value={filter.pk} onChange={this.handleFilterChange} key={keyInput} type="checkbox" name={filter.fields.name} defaultChecked />
+                                                <input className={filterClass} id={filterName} value={filter.pk} onChange={this.handleFilterChange} key={keyInput} type="checkbox" name={filter.fields.name} />
                                                 <label htmlFor={filterName} key={keyLabel} >{filter.fields.name}</label>
                                             </div>
                                         })
