@@ -134,7 +134,7 @@ class search(View):
                 return redirect('movie_detail', movie_pk=m.id)
             else:
                 url = reverse('display_user_list', kwargs={'user_pk': request.user.id})
-                return HttpResponseRedirect(url + "?%error=1")
+                return HttpResponseRedirect(url + "?error=1")
         else:
             return redirect('movie_detail', movie_pk=m.id)
 
