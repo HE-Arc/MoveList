@@ -9,8 +9,22 @@
     background-color: whitesmoke;
 }
 
+
 .add-to-list-btn
 {
   display: block;
   width: 100%;
+}
+
+body {
+  background-color: white;
+}
+
+html {
+  min-height: 100%;
+  background-color: $footer-background-color;
+}
+
+#main-content {
+  padding-bottom: 30px;
 }

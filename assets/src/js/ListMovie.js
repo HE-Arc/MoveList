@@ -4,10 +4,14 @@ export default class ListMovie extends React.Component {
     constructor(props)
     {
       super(props);
+      
+      this.state = {
+        movies: props.movies,
+      }
     }
 
     createListGenres(currentGenres) {
-        let genres = JSON.parse(this.props.genres);
+        let genres = this.props.data.genres;
         let listGenres = [];
 
         currentGenres.forEach(pk => {
@@ -22,9 +26,9 @@ export default class ListMovie extends React.Component {
     }
     createThumbnails() {
         let listThumbails = [];
-        if (this.props.movies != null && this.props.movies != undefined)
+        if (this.state.movies != null && this.state.movies != undefined)
         {
-            JSON.parse(this.props.movies).forEach(movie => {
+            this.state.movies.forEach(movie => {
                 listThumbails.push(
                     <div className="tile box is-parent is-vertical" key={ movie.pk }>
                         <div className="tile is-child is-12 has-text-centered">
@@ -38,9 +42,6 @@ export default class ListMovie extends React.Component {
                                     </figure>
                                 </div>
                                 <div className="tile is-10 is-vertical is-parent">
-                                    <div className="tile is-child is-12 has-text-centered">
-                                        <h1 className="subtitle has-text-weight-bold">{ movie.fields.name }</h1>
-                                    </div>
                                     <div className="tile is-child">
                                         <span className="has-text-weight-bold">Genre </span>
                                         <span>{this.createListGenres(movie.fields.genres)}</span>
@@ -70,7 +71,7 @@ export default class ListMovie extends React.Component {
                     <div className="tile is-ancestor is-vertical">
                         <div className="tile is-parent">
                             <div className="tile is-child">
-                                <h1 className="title">Recherche de film</h1>
+                                <h1 className="title">Liste de film</h1>
                             </div>
                         </div>
                         {this.createThumbnails()}
