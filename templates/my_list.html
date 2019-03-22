@@ -8,4 +8,14 @@
           data-{{key}}="{{ value }}"
       {% endfor %}
   ></div>
+
+  {% if error %}
+      <div class="section">
+          <div class="container">
+              <div class="notification is-black">
+                  Sorry, Movie not found !!
+              </div>
+          </div>
+      </div>
+  {% endif %}
 {% endblock %}
