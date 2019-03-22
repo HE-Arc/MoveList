@@ -16,13 +16,13 @@ export default class MainComponent extends React.Component {
         data.types = JSON.parse(jsonData.types);
         data.genres = JSON.parse(jsonData.genres);
         data.people = JSON.parse(jsonData.people);
-        
+
         this.state = {
             data : data,
             usermovies : JSON.parse(jsonData.usermovies),
             moviesFiltred : JSON.parse(jsonData.movies),
         }
-        
+
         this.handleFiltersChange = this.handleFiltersChange.bind(this);
         this.listMovie = React.createRef();
     }
@@ -60,7 +60,7 @@ export default class MainComponent extends React.Component {
                     break;
             }
         }
-        
+
         this.listMovie.current.state.movies = this.state.moviesFiltred;
         this.listMovie.current.forceUpdate();
     }
