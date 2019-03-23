@@ -3,7 +3,7 @@ from movielistapp.listmodels.person import Person
 from movielistapp.listmodels.country import Country
 from movielistapp.listmodels.type import Type
 from movielistapp.listmodels.genre import Genre
-from django_mysql.models import JSONField
+from django.contrib.postgres.fields import JSONField
 
 
 class Movie(models.Model):

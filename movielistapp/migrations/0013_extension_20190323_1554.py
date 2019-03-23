@@ -7,7 +7,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('movielistapp', '0011_auto_20190314_1622'),
+        ('movielistapp', '0012_auto_20190314_1714'),
     ]
 
     operations = [
