@@ -142,10 +142,11 @@ class search(View):
                 id = request.GET['i']
             except:
                 return redirect('index')
-              
+
         if title is not None:
-            m = Movie.objects.filter(name__unaccent__trigram_similar=title).first() if year is None else Movie.objects.filter(name=title,
-                                                                                               year=year).first()
+            m = Movie.objects.filter(
+                name__unaccent__trigram_similar=title).first() if year is None else Movie.objects.filter(name=title,
+                                                                                                         year=year).first()
         else:
             m = Movie.objects.filter(imdbID=id).first()
 
@@ -187,24 +188,23 @@ def add_json_db(movie):
 
         try:
             movie_selected = Movie.objects.create(imdbID=movie['imdbID'], name=movie['Title'],
-                                                         year=movie['Year'], released=format_date(movie['Released']),
-                                                         runtime=movie['Runtime'], poster_link=movie['Poster'],
-                                                         ratings=ratings, plot=movie['Plot'],
-                                                         awards=movie['Awards'], dvd=format_date(movie['DVD']),
-                                                         director=director,
-                                                         type=type_movie)
+                                                  year=movie['Year'], released=format_date(movie['Released']),
+                                                  runtime=movie['Runtime'], poster_link=movie['Poster'],
+                                                  ratings=ratings, plot=movie['Plot'],
+                                                  awards=movie['Awards'], dvd=format_date(movie['DVD']),
+                                                  director=director,
+                                                  type=type_movie)
         except IntegrityError as e:
             movie_selected = Movie.objects.get(imdbID=movie['imdbID'])
             is_created = False
             print(e)
 
         if is_created:
-            add_relation(new_movie.scenarists, writer)
-            add_relation(new_movie.actors, actors)
-            add_relation(new_movie.countrys, countries)
-            add_relation(new_movie.genres, genres)
-        return new_movie
-
+            add_relation(movie_selected.scenarists, writer)
+            add_relation(movie_selected.actors, actors)
+            add_relation(movie_selected.countrys, countries)
+            add_relation(movie_selected.genres, genres)
+        return movie_selected
 
 
 def many_get_or_add_in_db(str_data, model: models.Model):
