@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'webpack_loader',
     'rest_framework',
     'movielistapp',
@@ -130,11 +131,11 @@ LOGIN_REDIRECT_URL = 'my_list'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('GROUPNAME', 'movielist'),
         'USER': os.getenv('GROUPNAME', 'movielist'),
         'PASSWORD': os.getenv('PASSWORD', '1234'),
-        'HOST': os.getenv('MYSQL_HOST', 'localhost'),
-        'PORT': os.getenv('MYSQL_PORT', 3306),
+        'HOST': os.getenv('PSQL_HOST', 'localhost'),
+        'PORT': os.getenv('PSQL_PORT', 5432),
     }
 }
