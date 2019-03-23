@@ -1,32 +1,25 @@
 import React from 'react';
+import CopyListUrl from './CopyListUrl.js';
 
 export default class ListMovie extends React.Component {
     constructor(props)
     {
       super(props);
-      
+
       this.state = {
         movies: props.movies,
       }
     }
 
     createListGenres(currentGenres) {
-        let genres = this.props.data.genres;
-        let listGenres = [];
+      let genres = this.props.data.genres;
+      let listGenres = genres.filter(genre => currentGenres.includes(genre.pk)).map(genre => genre.fields.name);
 
-        currentGenres.forEach(pk => {
-            if (listGenres.length > 0)
-            {
-                listGenres.push(', ');
-            }
-            listGenres.push(genres.filter( genre => genre.pk == pk)[0].fields.name);
-        });
-
-        return listGenres;
+      return listGenres.join(', ');
     }
     createThumbnails() {
         let listThumbails = [];
-        if (this.state.movies != null && this.state.movies != undefined)
+        if (this.state.movies !== null && this.state.movies !== undefined)
         {
             this.state.movies.forEach(movie => {
                 listThumbails.push(
@@ -60,6 +53,13 @@ export default class ListMovie extends React.Component {
                     </div>
                 );
             });
+
+            if(listThumbails.length === 0)
+            {
+              return <div className="notification is-warning">There are no movies in this list</div>
+
+            }
+
             return listThumbails;
         }
     }
@@ -71,7 +71,14 @@ export default class ListMovie extends React.Component {
                     <div className="tile is-ancestor is-vertical">
                         <div className="tile is-parent">
                             <div className="tile is-child">
-                                <h1 className="title">Liste de film</h1>
+                              <div className="columns">
+                                <div className="column is-8">
+                                  <h1 className="title">List of {this.props.data.user.name}</h1>
+                                </div>
+                                <div className="column is-4">
+                                  <CopyListUrl userId={this.props.data.user.id} />
+                                </div>
+                              </div>
                             </div>
                         </div>
                         {this.createThumbnails()}
@@ -79,5 +86,5 @@ export default class ListMovie extends React.Component {
                 </div>
             </section>
         );
-    }    
+    }
 }

@@ -3,8 +3,8 @@ import '../../../node_modules/@fortawesome/fontawesome-free/js/all.min.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import MainComponent from './MainComponent.js';
-import AddToListButton from './MovieList/AddToListButton.js';
+import MainComponent from './ReactComponents/MainComponent.js';
+import AddToListButton from './ReactComponents/MovieList/AddToListButton.js';
 
 // https://stackoverflow.com/questions/31933359/using-react-in-a-multi-page-app
 const APPS = {

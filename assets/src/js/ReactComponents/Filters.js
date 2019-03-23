@@ -6,7 +6,7 @@ export default class Filters extends React.Component {
     constructor(props)
     {
       super(props);
- 
+
       this.handleFiltersChange = this.handleFiltersChange.bind(this);
     }
 
@@ -72,7 +72,8 @@ export default class Filters extends React.Component {
 
     render() {
         return (
-            <section className="section">
+            <section className="section filters">
+                <h3 className="title">Filters</h3>
                 <div className="container">
                     <nav className="level">
                         {this.filterState()}
@@ -86,5 +87,5 @@ export default class Filters extends React.Component {
                 </div>
             </section>
         );
-    }    
+    }
 }

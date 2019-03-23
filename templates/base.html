@@ -27,7 +27,7 @@
             <div class="navbar-end">
               {% url 'index' as index_url %}
               <a href="{{ index_url }}" class="navbar-item {% if request.path == index_url %}is-active{% endif %}" >
-                Accueil
+                Home
               </a>
               {% if not user.is_authenticated %}
                 {% url 'signup' as signup_url %}
@@ -36,7 +36,7 @@
                 </a>
                 {% url 'login' as login_url %}
                 <a href="{{ login_url }}" class="navbar-item {% if request.path == login_url %}is-active{% endif %}">
-                  Connexion
+                  Connect
                 </a>
               {% else %}
                 {% url 'my_list' as my_list_url %}
@@ -44,7 +44,7 @@
                   My List
                 </a>
                 <a class="navbar-item" href="{% url 'logout' %}">
-                  Déconnexion
+                  Disconnect
                 </a>
               {% endif %}
             </div>

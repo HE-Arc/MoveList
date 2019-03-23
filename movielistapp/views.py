@@ -110,9 +110,11 @@ def display_list(user, request):
             data['types'] = serializers.serialize('json', list(Type.objects.all()))
             data['genres'] = serializers.serialize('json', list(Genre.objects.all()))
             data['people'] = serializers.serialize('json', list(Person.objects.all()))
+            data['user'] = user.username
+            data['user_id'] = user.pk
 
-            context['data'] = json.dumps(data)
-
+            context['data'] = data
+            print(data)
         except ObjectDoesNotExist:
             context['data'] = None
     return render(request, 'my_list.html', context)

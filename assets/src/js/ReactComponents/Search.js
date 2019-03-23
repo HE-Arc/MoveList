@@ -35,7 +35,7 @@ class Search extends React.Component {
             <section className="section">
                 <div className="container">
                     <div className="notification">
-                        <h1 className="title">Recherche de film</h1>
+                        <h1 className="title">Search a movie</h1>
                         <form onSubmit={this.handleSubmit}>
                             <div className="field is-grouped">
 
@@ -49,7 +49,7 @@ class Search extends React.Component {
                                 </div>
                                 <div className="control">
                                     <button type="submit" className="button is-info">
-                                        Rechercher
+                                        Search
                                     </button>
                                 </div>
 
@@ -62,7 +62,7 @@ class Search extends React.Component {
                             </div>
                             <div className="control">
                                 <a className="button is-info">
-                                    Rechercher
+                                    Search
                                 </a>
                             </div>
                         </div>
