@@ -138,7 +138,7 @@ class search(View):
         except:
             year = None
 
-        m = Movie.objects.filter(name__search=title).first() if year is None else Movie.objects.filter(name=title,
+        m = Movie.objects.filter(name__unaccent__trigram_similar=title).first() if year is None else Movie.objects.filter(name=title,
                                                                                                year=year).first()
         if m is None:
             api_request = f'http://www.omdbapi.com/?t={title}&apikey=f625944d' if year is None \
