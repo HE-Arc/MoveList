@@ -5,11 +5,14 @@ class Search extends React.Component {
         super(props);
         this.state = {
             title: '',
-            year: ''
+            year: '',
+            id: ''
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeYear = this.handleChangeYear.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChangeID = this.handleChangeID.bind(this);
+        this.handleSubmitMovie = this.handleSubmitMovie.bind(this);
+        this.handleSubmitID = this.handleSubmitID.bind(this);
     }
 
     handleChange(event) {
@@ -20,15 +23,27 @@ class Search extends React.Component {
         this.setState({year: event.target.value});
     }
 
-    handleSubmit(event) {
+    handleChangeID(event) {
+        this.setState({id: event.target.value});
+    }
+
+    handleSubmitID(event) {
+        event.preventDefault();
+        if (this.state.id !== '') {
+            window.location.href = `../../search?i=${this.state.id}`;
+        }
+    }
+
+    handleSubmitMovie(event) {
         event.preventDefault();
         if (this.state.title !== '' && this.state.year !== '') {
-            window.location.href = `../../search?title=${this.state.title}&year=${this.state.year}`;
-        }else if(this.state.title !== ''){
-            window.location.href = `../../search?title=${this.state.title}`;
+            window.location.href = `../../search?title=${encodeURI(this.state.title)}&year=${encodeURI(this.state.year)}`;
+        } else if (this.state.title !== '') {
+            window.location.href = `../../search?title=${encodeURI(this.state.title)}`;
         }
 
     }
+
 
     render() {
         return (
@@ -36,7 +51,7 @@ class Search extends React.Component {
                 <div className="container">
                     <div className="notification">
                         <h1 className="title">Search a movie</h1>
-                        <form onSubmit={this.handleSubmit}>
+                        <form onSubmit={this.handleSubmitMovie}>
                             <div className="field is-grouped">
 
                                 <div className="control is-expanded">
@@ -56,16 +71,19 @@ class Search extends React.Component {
                             </div>
                         </form>
                         <div className="is-divider" id="search-divider" data-content="OR"></div>
-                        <div className="field is-grouped">
-                            <div className="control is-expanded">
-                                <input className="input" type="text" placeholder="ID"/>
+                        <form onSubmit={this.handleSubmitID}>
+                            <div className="field is-grouped">
+                                <div className="control is-expanded">
+                                    <input className="input" type="text" value={this.state.id}
+                                           onChange={this.handleChangeID} placeholder="ID"/>
+                                </div>
+                                <div className="control">
+                                    <button type="submit" className="button is-info">
+                                        Search
+                                    </button>
+                                </div>
                             </div>
-                            <div className="control">
-                                <a className="button is-info">
-                                    Search
-                                </a>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </section>
