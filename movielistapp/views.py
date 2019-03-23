@@ -94,7 +94,6 @@ def display_list(user, request):
         error = request.GET['error']
         if error is not None and error == '1':
             context['error'] = True
-
     except:
         pass
 
@@ -134,7 +133,6 @@ class search(View):
             year = int(request.GET['year'])
         except:
             year = None
-
         m = Movie.objects.filter(name=title).first() if year is None else Movie.objects.filter(name=title,
                                                                                                year=year).first()
         if m is None:
@@ -160,11 +158,16 @@ def add_json_db(movie):
         countries = many_get_or_add_in_db(movie['Country'], Country)
         type_movie = get_or_add_in_db(movie['Type'], Type)
         writer = many_get_or_add_in_db(movie['Writer'], Person)
+        try:
+            dvd = movie['DVD']
+        except:
+            dvd = None
         new_movie_info = Movie.objects.get_or_create(imdbID=movie['imdbID'], name=movie['Title'],
-                                                     year=movie['Year'], released=format_date(movie['Released']),
+                                                     year=format_year(movie['Year']),
+                                                     released=format_date(movie['Released']),
                                                      runtime=movie['Runtime'], poster_link=movie['Poster'],
                                                      ratings=movie['Ratings'], plot=movie['Plot'],
-                                                     awards=movie['Awards'], dvd=format_date(movie['DVD']),
+                                                     awards=movie['Awards'], dvd=format_date(dvd),
                                                      director=director,
                                                      type=type_movie)
         new_movie, is_created = new_movie_info
@@ -194,7 +197,7 @@ def add_relation(movie, datas):
 
 
 def format_date(date):
-    if date == 'N/A':
+    if date == 'N/A' or date is None:
         return None
     return datetime.datetime.strptime(date, '%d %b %Y').strftime('%Y-%m-%d')
 
@@ -203,3 +206,7 @@ def is_in_api(movie):
     if movie["Response"] == 'True':
         return True
     return False
+
+
+def format_year(year):
+    return year[:4]

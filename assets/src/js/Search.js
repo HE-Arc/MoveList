@@ -23,9 +23,9 @@ class Search extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
         if (this.state.title !== '' && this.state.year !== '') {
-            window.location.href = `../../movie/search?title=${this.state.title}&year=${this.state.year}`;
+            window.location.href = `../../search?title=${this.state.title}&year=${this.state.year}`;
         }else if(this.state.title !== ''){
-            window.location.href = `../../movie/search?title=${this.state.title}`;
+            window.location.href = `../../search?title=${this.state.title}`;
         }
 
     }

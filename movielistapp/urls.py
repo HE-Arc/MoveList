@@ -11,5 +11,5 @@ urlpatterns = [
     path('list/add/<movie_pk>/', views.add_movie_to_list, name='add_movie_to_list'),
     path('list/edit/<movie_pk>/', views.edit_movie_in_list, name='add_movie_to_list'),
     path('list/remove/<movie_pk>/', views.remove_movie_from_list, name='remove_movie_from_list'),
-    path('movie/search', views.search.as_view(), name="search"),
+    path('search/', views.search.as_view(), name="search"),
 ]
