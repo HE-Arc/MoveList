@@ -5,10 +5,12 @@ class Search extends React.Component {
         super(props);
         this.state = {
             title: '',
-            year: ''
+            year: '',
+            id: ''
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeYear = this.handleChangeYear.bind(this);
+        this.handleChangeID = this.handleChangeID.bind(this);
         this.handleSubmitMovie = this.handleSubmitMovie.bind(this);
         this.handleSubmitID = this.handleSubmitID.bind(this);
     }
@@ -21,8 +23,15 @@ class Search extends React.Component {
         this.setState({year: event.target.value});
     }
 
-    handleSubmitID(event) {
+    handleChangeID(event) {
+        this.setState({id: event.target.value});
+    }
 
+    handleSubmitID(event) {
+        event.preventDefault();
+        if (this.state.id !== '') {
+            window.location.href = `../../search?i=${this.state.id}`;
+        }
     }
 
     handleSubmitMovie(event) {
@@ -65,7 +74,8 @@ class Search extends React.Component {
                         <form onSubmit={this.handleSubmitID}>
                             <div className="field is-grouped">
                                 <div className="control is-expanded">
-                                    <input className="input" type="text" placeholder="ID"/>
+                                    <input className="input" type="text" value={this.state.id}
+                                           onChange={this.handleChangeID} placeholder="ID"/>
                                 </div>
                                 <div className="control">
                                     <button type="submit" className="button is-info">

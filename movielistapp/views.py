@@ -127,19 +127,31 @@ def index(request):
 
 class search(View):
     def get(self, request):
+        id = None
+        year = None
+        title = None
         try:
             title = request.GET['title']
+            try:
+                year = int(request.GET['year'])
+            except:
+                pass
         except:
-            return redirect('index')
-        try:
-            year = int(request.GET['year'])
-        except:
-            year = None
-        m = Movie.objects.filter(name=title).first() if year is None else Movie.objects.filter(name=title,
-                                                                                               year=year).first()
+            try:
+                id = request.GET['i']
+            except:
+                return redirect('index')
+        if title is not None:
+            m = Movie.objects.filter(name=title).first() if year is None else Movie.objects.filter(name=title,
+                                                                                                   year=year).first()
+        else:
+            m = Movie.objects.filter(imdbID=id).first()
         if m is None:
-            api_request = f'http://www.omdbapi.com/?t={title}&apikey=f625944d' if year is None \
-                else f'http://www.omdbapi.com/?t={title}&y={year}&apikey=f625944d'
+            if title is not None:
+                api_request = f'http://www.omdbapi.com/?t={title}&apikey=f625944d' if year is None \
+                    else f'http://www.omdbapi.com/?t={title}&y={year}&apikey=f625944d'
+            else:
+                api_request = f'http://www.omdbapi.com/?i={id}&apikey=f625944d'
             r = requests.get(api_request)
             f = r.json()
             if is_in_api(f):
@@ -174,9 +186,9 @@ def add_json_db(movie):
                                                      type=type_movie)
         new_movie, is_created = new_movie_info
         if is_created:
-            add_relation(new_movie.scenarist, writer)
+            add_relation(new_movie.scenarists, writer)
             add_relation(new_movie.actors, actors)
-            add_relation(new_movie.country, countries)
+            add_relation(new_movie.countrys, countries)
             add_relation(new_movie.genres, genres)
         return new_movie
 
