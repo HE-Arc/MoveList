@@ -18,9 +18,9 @@ class Movie(models.Model):
     awards = models.CharField(max_length=200, null=True)
     dvd = models.DateField(null=True)
     director = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='director')
-    scenarist = models.ManyToManyField(Person, related_name='scenarists')
+    scenarists = models.ManyToManyField(Person, related_name='scenarists')
     actors = models.ManyToManyField(Person, related_name='actors')
-    country = models.ManyToManyField(Country, related_name='countries')
+    countrys = models.ManyToManyField(Country, related_name='countries')
     type = models.ForeignKey(Type, on_delete=models.CASCADE)
     genres = models.ManyToManyField(Genre)
 

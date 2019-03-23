@@ -11,6 +11,7 @@ export default class Filter extends React.Component {
       }
       
       this.handleFilterChange = this.handleFilterChange.bind(this);
+      this.handleFilterSort = this.handleFilterSort.bind(this);
     }
 
     toggleActivation(e) {
@@ -34,16 +35,20 @@ export default class Filter extends React.Component {
         this.props.onChange(this.props.id, checkbox.currentTarget.value, checkbox.currentTarget.checked, this.props.type, nbChecked, previousNbChecked);
     }
 
+    handleFilterSort(button) {
+        this.props.onClick(this.props.id, button.currentTarget.value, this.props.type);
+    }
+
     render() {
         return (
             <div className="level-item has-text-centered">
                 <div className="field has-addons">
                     <div className="control">
-                        <a className="button is-info">
+                        <button className="button is-info" onClick={this.handleFilterSort} value="ASC">
                             <span className="icon">
                                 <i className="fas fa-arrow-up"></i>
                             </span>
-                        </a>
+                        </button>
                     </div>
                     <div className="control">
                         <div id={this.state.name} className="dropdown">
@@ -74,11 +79,11 @@ export default class Filter extends React.Component {
                         </div>
                     </div>
                     <div className="control">
-                        <a className="button is-info">
+                        <button className="button is-info"  onClick={this.handleFilterSort} value="DES">
                             <span className="icon">
                                 <i className="fas fa-arrow-down"></i>
                             </span>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>

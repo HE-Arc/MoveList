@@ -13,11 +13,11 @@ export default class CopyListUrl extends React.Component {
       return (
         <div>
 
-          <div class="field is-horizontal">
-            <div class="field-label is-normal">
-              <label class="label">Share it : </label>
+          <div className="field is-horizontal">
+            <div className="field-label is-normal">
+              <label className="label">Share it : </label>
             </div>
-            <div class="field-body">
+            <div className="field-body">
               <div className="field has-addons has-text-right">
                 <div className="control">
                   <input className="input" type="text" value={this.getUrl()} ref={input => this.urlInput = input} readOnly />

@@ -8,17 +8,22 @@ export default class Filters extends React.Component {
       super(props);
 
       this.handleFiltersChange = this.handleFiltersChange.bind(this);
+      this.handleFiltersSort = this.handleFiltersSort.bind(this);
     }
 
     handleFiltersChange(filter, value, checked, type, nbChecked, previousNbChecked) {
         this.props.onChange(filter, value, checked, type, nbChecked, previousNbChecked);
     }
 
+    handleFiltersSort(filter, value, type) {
+        this.props.onClick(filter, value, type);
+    }
+
     filterState()
     {
         if (this.props.data.genres.length > 0)
         {
-            return <Filter onChange={this.handleFiltersChange} id="state" name="States" type="state" filters={this.props.data.states} />;
+            return <Filter onChange={this.handleFiltersChange} onClick={this.handleFiltersSort} id="state" name="States" type="state" filters={this.props.data.states} />;
         }
     }
 
@@ -26,7 +31,7 @@ export default class Filters extends React.Component {
     {
         if (this.props.data.types.length > 0)
         {
-            return <Filter  onChange={this.handleFiltersChange} id="type" name="Types" type="number" filters={this.props.data.types} />;
+            return <Filter  onChange={this.handleFiltersChange} onClick={this.handleFiltersSort} id="type" name="Types" type="number" filters={this.props.data.types} />;
         }
     }
 
@@ -34,7 +39,7 @@ export default class Filters extends React.Component {
     {
         if (this.props.data.genres.length > 0)
         {
-            return <Filter onChange={this.handleFiltersChange} id="genres" name="Genres" type="list" filters={this.props.data.genres} />;
+            return <Filter onChange={this.handleFiltersChange} onClick={this.handleFiltersSort} id="genres" name="Genres" type="list" filters={this.props.data.genres} />;
         }
     }
 
@@ -42,7 +47,7 @@ export default class Filters extends React.Component {
     {
         if (this.props.data.people.length > 0)
         {
-            return <Filter  onChange={this.handleFiltersChange} id="director" name="Directors" type="number" filters={this.props.data.people} />;
+            return <Filter  onChange={this.handleFiltersChange} onClick={this.handleFiltersSort} id="director" name="Directors" type="number" filters={this.props.data.people} />;
         }
     }
 
@@ -50,7 +55,7 @@ export default class Filters extends React.Component {
     {
         if (this.props.data.people.length > 0)
         {
-            return <Filter  onChange={this.handleFiltersChange} id="scenarist" name="Scenarists" type="list" filters={this.props.data.people} />;
+            return <Filter  onChange={this.handleFiltersChange} onClick={this.handleFiltersSort} id="scenarists" name="Scenarists" type="list" filters={this.props.data.people} />;
         }
     }
 
@@ -58,7 +63,7 @@ export default class Filters extends React.Component {
     {
         if (this.props.data.people.length > 0)
         {
-            return <Filter  onChange={this.handleFiltersChange} id="actors" name="Actors" type="list" filters={this.props.data.people} />;
+            return <Filter  onChange={this.handleFiltersChange} onClick={this.handleFiltersSort} id="actors" name="Actors" type="list" filters={this.props.data.people} />;
         }
     }
 

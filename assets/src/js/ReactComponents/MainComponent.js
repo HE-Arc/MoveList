@@ -20,6 +20,7 @@ export default class MainComponent extends React.Component {
         }
 
         this.handleFiltersChange = this.handleFiltersChange.bind(this);
+        this.handleFiltersSort = this.handleFiltersSort.bind(this);
         this.listMovie = React.createRef();
     }
 
@@ -63,6 +64,30 @@ export default class MainComponent extends React.Component {
                 }
             }
         }
+        
+        this.updateListMovies();
+    }
+
+    handleFiltersSort(filter, value, type) {
+        let orientation = (value == "ASC") ? 1 : -1;
+        let usermovies = this.state.usermovies;
+
+        switch (type) {
+            case "state":
+                this.state.moviesFiltred = this.state.moviesFiltred.sort(function(a, b){return (usermovies.filter(usermovie => usermovie.fields.movie == a.pk)[0].fields[filter] > usermovies.filter(usermovie => usermovie.fields.movie == b.pk)[0].fields[filter])? orientation : -orientation});
+                break;
+            case "list":
+                this.state.moviesFiltred = this.state.moviesFiltred.sort(function(a, b){return (a.fields[filter].sort()[0] > b.fields[filter].sort()[0])? orientation : -orientation});
+                break;
+            case "number":
+                this.state.moviesFiltred = this.state.moviesFiltred.sort(function(a, b){return (a.fields[filter] > b.fields[filter])? orientation : -orientation});
+                break;
+        }
+
+        this.updateListMovies();
+    }
+
+    updateListMovies() {
         this.listMovie.current.state.movies = this.state.moviesFiltred;
         this.listMovie.current.forceUpdate();
     }
@@ -71,7 +96,7 @@ export default class MainComponent extends React.Component {
         return (
             <div>
                 <Search />
-                <Filters onChange={this.handleFiltersChange} data={ this.state } dataFiltred={ this.state.dataFiltred } />
+                <Filters onChange={this.handleFiltersChange}  onClick={this.handleFiltersSort} data={ this.state } />
                 <ListMovie  ref={this.listMovie} movies={ this.state.moviesFiltred } data={ this.state } />
             </div>
         );
