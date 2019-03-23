@@ -37,9 +37,9 @@ class Search extends React.Component {
     handleSubmitMovie(event) {
         event.preventDefault();
         if (this.state.title !== '' && this.state.year !== '') {
-            window.location.href = `../../search?title=${this.state.title}&year=${this.state.year}`;
+            window.location.href = `../../search?title=${encodeURI(this.state.title)}&year=${encodeURI(this.state.year)}`;
         } else if (this.state.title !== '') {
-            window.location.href = `../../search?title=${this.state.title}`;
+            window.location.href = `../../search?title=${encodeURI(this.state.title)}`;
         }
 
     }
