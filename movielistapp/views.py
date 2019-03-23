@@ -2,15 +2,16 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import generic, View
 from django.db import models
+from django.db import IntegrityError
+from django.db.models.functions import Lower
 from .models import Movie, Person, Genre, Country, Type
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse, HttpResponseRedirect
-from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
-import json, urllib
 from django.contrib.auth.decorators import login_required
+import json, urllib
 import requests, datetime
 
 from .models import Movie, ListMovie, Genre, State, Country, Type, Person
@@ -141,11 +142,13 @@ class search(View):
                 id = request.GET['i']
             except:
                 return redirect('index')
+              
         if title is not None:
-            m = Movie.objects.filter(name=title).first() if year is None else Movie.objects.filter(name=title,
-                                                                                                   year=year).first()
+            m = Movie.objects.filter(name__unaccent__trigram_similar=title).first() if year is None else Movie.objects.filter(name=title,
+                                                                                               year=year).first()
         else:
             m = Movie.objects.filter(imdbID=id).first()
+
         if m is None:
             if title is not None:
                 api_request = f'http://www.omdbapi.com/?t={title}&apikey=f625944d' if year is None \
@@ -172,25 +175,36 @@ def add_json_db(movie):
         countries = many_get_or_add_in_db(movie['Country'], Country)
         type_movie = get_or_add_in_db(movie['Type'], Type)
         writer = many_get_or_add_in_db(movie['Writer'], Person)
+        ratings = movie['Ratings']
+
         try:
             dvd = movie['DVD']
         except:
             dvd = None
-        new_movie_info = Movie.objects.get_or_create(imdbID=movie['imdbID'], name=movie['Title'],
-                                                     year=format_year(movie['Year']),
-                                                     released=format_date(movie['Released']),
-                                                     runtime=movie['Runtime'], poster_link=movie['Poster'],
-                                                     ratings=movie['Ratings'], plot=movie['Plot'],
-                                                     awards=movie['Awards'], dvd=format_date(dvd),
-                                                     director=director,
-                                                     type=type_movie)
-        new_movie, is_created = new_movie_info
+
+        is_created = True
+        movie_selected = None
+
+        try:
+            movie_selected = Movie.objects.create(imdbID=movie['imdbID'], name=movie['Title'],
+                                                         year=movie['Year'], released=format_date(movie['Released']),
+                                                         runtime=movie['Runtime'], poster_link=movie['Poster'],
+                                                         ratings=ratings, plot=movie['Plot'],
+                                                         awards=movie['Awards'], dvd=format_date(movie['DVD']),
+                                                         director=director,
+                                                         type=type_movie)
+        except IntegrityError as e:
+            movie_selected = Movie.objects.get(imdbID=movie['imdbID'])
+            is_created = False
+            print(e)
+
         if is_created:
             add_relation(new_movie.scenarists, writer)
             add_relation(new_movie.actors, actors)
             add_relation(new_movie.countrys, countries)
             add_relation(new_movie.genres, genres)
         return new_movie
+
 
 
 def many_get_or_add_in_db(str_data, model: models.Model):
