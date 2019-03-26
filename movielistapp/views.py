@@ -128,20 +128,34 @@ def index(request):
 
 class search(View):
     def get(self, request):
+        id = None
+        year = None
+        title = None
         try:
             title = request.GET['title']
+            try:
+                year = int(request.GET['year'])
+            except:
+                pass
         except:
-            return redirect('index')
-        try:
-            year = int(request.GET['year'])
-        except:
-            year = None
+            try:
+                id = request.GET['i']
+            except:
+                return redirect('index')
 
-        m = Movie.objects.filter(name__unaccent__trigram_similar=title).first() if year is None else Movie.objects.filter(name=title,
-                                                                                               year=year).first()
+        if title is not None:
+            m = Movie.objects.filter(
+                name__unaccent__trigram_similar=title).first() if year is None else Movie.objects.filter(name=title,
+                                                                                                         year=year).first()
+        else:
+            m = Movie.objects.filter(imdbID=id).first()
+
         if m is None:
-            api_request = f'http://www.omdbapi.com/?t={title}&apikey=f625944d' if year is None \
-                else f'http://www.omdbapi.com/?t={title}&y={year}&apikey=f625944d'
+            if title is not None:
+                api_request = f'http://www.omdbapi.com/?t={title}&apikey=f625944d' if year is None \
+                    else f'http://www.omdbapi.com/?t={title}&y={year}&apikey=f625944d'
+            else:
+                api_request = f'http://www.omdbapi.com/?i={id}&apikey=f625944d'
             r = requests.get(api_request)
             f = r.json()
             if is_in_api(f):
@@ -174,21 +188,21 @@ def add_json_db(movie):
 
         try:
             movie_selected = Movie.objects.create(imdbID=movie['imdbID'], name=movie['Title'],
-                                                         year=movie['Year'], released=format_date(movie['Released']),
-                                                         runtime=movie['Runtime'], poster_link=movie['Poster'],
-                                                         ratings=ratings, plot=movie['Plot'],
-                                                         awards=movie['Awards'], dvd=format_date(movie['DVD']),
-                                                         director=director,
-                                                         type=type_movie)
+                                                  year=movie['Year'], released=format_date(movie['Released']),
+                                                  runtime=movie['Runtime'], poster_link=movie['Poster'],
+                                                  ratings=ratings, plot=movie['Plot'],
+                                                  awards=movie['Awards'], dvd=format_date(movie['DVD']),
+                                                  director=director,
+                                                  type=type_movie)
         except IntegrityError as e:
             movie_selected = Movie.objects.get(imdbID=movie['imdbID'])
             is_created = False
             print(e)
 
         if is_created:
-            add_relation(movie_selected.scenarist, writer)
+            add_relation(movie_selected.scenarists, writer)
             add_relation(movie_selected.actors, actors)
-            add_relation(movie_selected.country, countries)
+            add_relation(movie_selected.countrys, countries)
             add_relation(movie_selected.genres, genres)
         return movie_selected
 
