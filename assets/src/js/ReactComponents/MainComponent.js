@@ -134,7 +134,7 @@ export default class MainComponent extends React.Component {
             <div>
                 <Search />
                 <Filters onChange={this.handleFiltersChange}  onClick={this.handleFiltersSort} data={ this.state } />
-                <ListMovie  ref={this.listMovie} movies={ this.state.moviesFiltred } usermovies={ this.state.usermovies } data={ this.state } />
+                <ListMovie  ref={this.listMovie} movies={ this.state.moviesFiltred } perPage={ 2 } usermovies={ this.state.usermovies } data={ this.state } />
             </div>
         );
     }
