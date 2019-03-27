@@ -65,7 +65,7 @@ export default class MainComponent extends React.Component {
     handleFiltersSort(filter, value, type) {
         let orientation = (value == "ASC") ? 1 : -1;
         let usermovies = this.state.usermovies;
-
+        
         switch (type) {
             case "state":
                 let states = this.state.states;
@@ -76,14 +76,14 @@ export default class MainComponent extends React.Component {
                     
                     return (elementA.fields.name > elementB.fields.name) ? orientation : (elementA.fields.name < elementB.fields.name) ? - orientation : 0;
                 });
-
                 break;
+
             case "list":
-                let elements = this.state[filter];
+                let listElements = (filter == "director" || filter == "scenarists" || filter == "actors") ? this.state["people"] : this.state[filter];
                 this.state.moviesFiltred = this.state.moviesFiltred.sort(function(movieA, movieB) {
 
-                    let pksA = movieA.fields[filter].sort((a, b) => (elements.filter(element => element.pk == a)[0].fields.name >= elements.filter(element => element.pk == b)[0].fields.name) ? 1 : -1);
-                    let pksB = movieB.fields[filter].sort((a, b) => (elements.filter(element => element.pk == a)[0].fields.name >= elements.filter(element => element.pk == b)[0].fields.name) ? 1 : -1);   
+                    let pksA = movieA.fields[filter].sort((a, b) => (listElements.filter(element => element.pk == a)[0].fields.name >= listElements.filter(element => element.pk == b)[0].fields.name) ? 1 : -1);
+                    let pksB = movieB.fields[filter].sort((a, b) => (listElements.filter(element => element.pk == a)[0].fields.name >= listElements.filter(element => element.pk == b)[0].fields.name) ? 1 : -1);   
 
                     let nbPkA = pksA.length;
                     let nbPkB = pksB.length;
@@ -93,8 +93,8 @@ export default class MainComponent extends React.Component {
 
                     for (let index = 0 ; index < nbPk; index++)
                     {
-                        let elementA = elements.filter(element => element.pk == pksA[index])[0];
-                        let elementB = elements.filter(element => element.pk == pksB[index])[0];
+                        let elementA = listElements.filter(element => element.pk == pksA[index])[0];
+                        let elementB = listElements.filter(element => element.pk == pksB[index])[0];
                         
                         order = (elementA.fields.name > elementB.fields.name) ? orientation : (elementA.fields.name < elementB.fields.name) ? - orientation : 0;
 
@@ -106,8 +106,18 @@ export default class MainComponent extends React.Component {
                 });
 
                 break;
+
             case "number":
-                this.state.moviesFiltred = this.state.moviesFiltred.sort(function(a, b){return (a.fields[filter] > b.fields[filter]) ? orientation : (a.fields[filter] < b.fields[filter]) ? - orientation : 0;});
+                let valueElements = (filter == "director" || filter == "scenarists" || filter == "actors") ? this.state["people"] : this.state[filter];
+
+                this.state.moviesFiltred = this.state.moviesFiltred.sort(function(movieA, movieB) {
+                    
+                    let elementA = valueElements.filter(element => element.pk == movieA.fields[filter])[0];
+                    let elementB = valueElements.filter(element => element.pk == movieB.fields[filter])[0];
+                    
+                    return(elementA.fields.name > elementB.fields.name) ? orientation : (elementA.fields.name < elementB.fields.name) ? - orientation : 0;
+                });
+
                 break;
         }
 
