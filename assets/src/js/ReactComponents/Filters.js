@@ -1,6 +1,5 @@
 import React from 'react';
 import Filter from './Filter.js';
-import FilterRuntime from './FilterRuntime.js';
 
 export default class Filters extends React.Component {
     constructor(props)
@@ -67,14 +66,6 @@ export default class Filters extends React.Component {
         }
     }
 
-    filterRuntime()
-    {
-        if (this.props.data.movies.length > 0)
-        {
-            return <FilterRuntime  id="runtime" name="Runtime" type="runtime" filters={this.props.data.people} />;
-        }
-    }
-
     render() {
         return (
             <section className="section filters">
@@ -84,7 +75,6 @@ export default class Filters extends React.Component {
                         {this.filterState()}
                         {this.filterTypes()}
                         {this.filterGenres()}
-                        {this.filterRuntime()}
                         {this.filterDirector()}
                         {this.filterScenarists()}
                         {this.filterActors()}
