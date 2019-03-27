@@ -4,6 +4,21 @@
 
 {% block content %}
   <div>
-    Welcome on MovieList
+    <div id="Search" class="react-component"></div>
+
+    <div class="section filters">
+      <h1 class="title">Welcome !</h1>
+
+      <p class="content">
+        MovieList is a webapp to store the movie you watched or you're planning to watch.
+        All the movie are searched on OMDb, and you can search them with the IMDb ID. The search engine is provided by that API, which can lead to silly result 😀
+      </p>
+      {% if not user.is_authenticated %}
+        <h2 class="title is-5">Connect or Register</h2>
+        <p class="content">
+          You can create an account <a href="{% url 'signup' %}">here</a> or connect <a href="{% url 'login' %}">here</a>.
+        </p>
+      {% endif %}
+    </div>
   </div>
 {% endblock %}
