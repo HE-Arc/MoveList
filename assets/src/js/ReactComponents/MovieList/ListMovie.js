@@ -21,9 +21,9 @@ export default class ListMovie extends React.Component {
 
     getViewing(movie)
     {
-        let viewingMovie = this.props.usermovies.filter(usermovie => usermovie.fields.movie == movie.pk)[0];
         let tileNote = [];
 
+        let viewingMovie = this.props.usermovies.filter(usermovie => usermovie.fields.movie == movie.pk)[0];
         let state = this.props.data.states.filter(states => states.pk == viewingMovie.fields.state)[0];
 
         tileNote.push(
@@ -33,11 +33,11 @@ export default class ListMovie extends React.Component {
             </div>
         );
 
-        if ( viewingMovie.fields.note != null) {
+        if ( movie.fields.ratings != null) {
             tileNote.push(
                 <div className="tile is-child">
                     <div className="has-text-weight-bold tag is-warning">My note</div>
-                    <span> { viewingMovie.fields.note } / 10</span>
+                    <span> { movie.fields.ratings } / 10</span>
                 </div>
             );
         }
@@ -70,8 +70,8 @@ export default class ListMovie extends React.Component {
                                     </div>
                                     {this.getViewing(movie)}
                                     <div className="tile is-child">
-                                        <span className="has-text-weight-bold tag is-warning">Plot</span>
-                                        <span> { movie.fields.plot }</span>
+                                        <span className="has-text-weight-bold  tag is-warning">Plot</span>
+                                        <span>{ movie.fields.plot }</span>
                                     </div>
                                 </div>
                             </div>

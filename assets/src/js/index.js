@@ -5,11 +5,13 @@ import ReactDOM from 'react-dom';
 
 import MainComponent from './ReactComponents/MainComponent.js';
 import AddToListButton from './ReactComponents/MovieList/AddToListButton.js';
+import Search from './ReactComponents/Search.js';
 
 // https://stackoverflow.com/questions/31933359/using-react-in-a-multi-page-app
 const APPS = {
   MainComponent,
   AddToListButton,
+  Search
 };
 
 function renderAppInElement(el) {
@@ -17,6 +19,7 @@ function renderAppInElement(el) {
 
   if (!App)
   {
+    console.log(`component ${el.id} not found`);
     return;
   }
 

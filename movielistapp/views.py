@@ -4,7 +4,6 @@ from django.views import generic, View
 from django.db import models
 from django.db import IntegrityError
 from django.db.models.functions import Lower
-from .models import Movie, Person, Genre, Country, Type
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse, HttpResponseRedirect
@@ -13,6 +12,7 @@ from django.core import serializers
 from django.contrib.auth.decorators import login_required
 import json, urllib
 import requests, datetime
+from django.db.models import Avg
 
 from .models import Movie, ListMovie, Genre, State, Country, Type, Person
 
@@ -22,6 +22,7 @@ def movie_detail(request, movie_pk):
 
     context['movie'] = Movie.objects.select_related('type', 'director').get(pk=movie_pk)
     context['states'] = serializers.serialize('json', State.objects.all())
+    context['movielistrating'] = ListMovie.objects.filter(movie__pk=movie_pk).aggregate(Avg('note'))['note__avg']
 
     if request.user.is_authenticated:
         try:
@@ -36,20 +37,29 @@ def movie_detail(request, movie_pk):
     return render(request, 'movie/movie_detail.html', context)
 
 
+@login_required
 def add_movie_to_list(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
     current_user = request.user
-
     data = json.loads(request.body)
+    rating = None
+    state = None
+
+    if data['rating'] != '':
+        rating = data['rating']
+
+    if data['state'] != '':
+        state = State.objects.get(pk=data['state'])
 
     try:
-        list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=State.objects.get(pk=data['state']),
-                                              note=data['rating'])
+        list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=state,
+                                              note=rating)
         return JsonResponse({'listId': list_movie.pk}, status=200)
     except IntegrityError as e:
         return HttpResponseBadRequest()
 
 
+@login_required
 def edit_movie_in_list(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
     current_user = request.user
@@ -64,6 +74,7 @@ def edit_movie_in_list(request, movie_pk):
         return HttpResponseBadRequest()
 
 
+@login_required
 def remove_movie_from_list(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
     current_user = request.user
@@ -104,9 +115,16 @@ def display_list(user, request):
             data = {}
 
             usermovies = ListMovie.objects.select_related('movie').filter(user=user.pk)
+            
+            def get_movie_from_list_entry(list_entry):
+                list_entry.movie.ratings = list_entry.note
+                return list_entry.movie
+
+            movies = list(map(get_movie_from_list_entry, usermovies))
 
             data['usermovies'] = serializers.serialize('json', usermovies)
-            data['movies'] = serializers.serialize('json', list(map(lambda element: element.movie, usermovies)))
+
+            data['movies'] = serializers.serialize('json', movies)
             data['states'] = serializers.serialize('json', list(State.objects.all()))
             data['types'] = serializers.serialize('json', list(Type.objects.all()))
             data['genres'] = serializers.serialize('json', list(Genre.objects.all()))
@@ -115,7 +133,6 @@ def display_list(user, request):
             data['user_id'] = user.pk
 
             context['data'] = data
-            print(data)
         except ObjectDoesNotExist:
             context['data'] = None
     return render(request, 'my_list.html', context)
@@ -123,6 +140,13 @@ def display_list(user, request):
 
 def index(request):
     context = {}
+    context['error'] = False
+    try:
+        error = request.GET['error']
+        if error is not None and error == '1':
+            context['error'] = True
+    except:
+        pass
     return render(request, 'index.html', context)
 
 
@@ -131,6 +155,8 @@ class search(View):
         id = None
         year = None
         title = None
+        key = 'f625944d'
+
         try:
             title = request.GET['title']
             try:
@@ -145,27 +171,39 @@ class search(View):
 
         if title is not None:
             m = Movie.objects.filter(
-                name__unaccent__trigram_similar=title).first() if year is None else Movie.objects.filter(name=title,
-                                                                                                         year=year).first()
+                name__search=title).all() if year is None else Movie.objects.filter(name=title,
+                                                                                                         year=year).all()
         else:
             m = Movie.objects.filter(imdbID=id).first()
 
-        if m is None:
+        if m is None or len(m) == 0:
             if title is not None:
-                api_request = f'http://www.omdbapi.com/?t={title}&apikey=f625944d' if year is None \
-                    else f'http://www.omdbapi.com/?t={title}&y={year}&apikey=f625944d'
+                api_request = f'http://www.omdbapi.com/?t={title}&apikey={key}' if year is None \
+                    else f'http://www.omdbapi.com/?t={title}&y={year}&apikey={key}'
             else:
-                api_request = f'http://www.omdbapi.com/?i={id}&apikey=f625944d'
+                api_request = f'http://www.omdbapi.com/?i={id}&apikey={key}'
             r = requests.get(api_request)
             f = r.json()
             if is_in_api(f):
                 m = add_json_db(f)
                 return redirect('movie_detail', movie_pk=m.id)
             else:
-                url = reverse('display_user_list', kwargs={'user_pk': request.user.id})
+                if request.user.is_authenticated:
+                    url = reverse('my_list')
+                else:
+                    url = reverse('index')
                 return HttpResponseRedirect(url + "?error=1")
         else:
-            return redirect('movie_detail', movie_pk=m.id)
+            if type(m) == Movie:
+                return redirect('movie_detail', movie_pk=m.id)
+            else:
+                if len(m) == 1:
+                    return redirect('movie_detail', movie_pk=m[0].id)
+
+                print(m)
+                context = {}
+                context['movies'] = m
+                return render(request, 'multiple_result_search.html', context)
 
 
 def add_json_db(movie):
@@ -188,10 +226,11 @@ def add_json_db(movie):
 
         try:
             movie_selected = Movie.objects.create(imdbID=movie['imdbID'], name=movie['Title'],
-                                                  year=movie['Year'], released=format_date(movie['Released']),
+                                                  year=format_year(movie['Year']),
+                                                  released=format_date(movie['Released']),
                                                   runtime=movie['Runtime'], poster_link=movie['Poster'],
                                                   ratings=ratings, plot=movie['Plot'],
-                                                  awards=movie['Awards'], dvd=format_date(movie['DVD']),
+                                                  awards=movie['Awards'], dvd=format_date(dvd),
                                                   director=director,
                                                   type=type_movie)
         except IntegrityError as e:

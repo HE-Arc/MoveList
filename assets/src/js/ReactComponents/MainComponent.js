@@ -80,16 +80,34 @@ export default class MainComponent extends React.Component {
                 break;
             case "list":
                 let elements = this.state[filter];
-                this.state.moviesFiltred = this.state.moviesFiltred.sort(function(movieA, movieB){
-                    let elementA = elements.filter(element => element.pk = usermovies.filter(usermovie => usermovie.fields.movie == movieA.pk)[0].fields[filter].sort((a, b) => (a.name > b.name) ? orientation : -orientation))[0];
-                    let elementB = elements.filter(element => element.pk = usermovies.filter(usermovie => usermovie.fields.movie == movieB.pk)[0].fields[filter].sort((a, b) => (a.name > b.name) ? orientation : -orientation))[0];
+                this.state.moviesFiltred = this.state.moviesFiltred.sort(function(movieA, movieB) {
 
-                    return (elementA.fields.name > elementB.fields.name) ? orientation : (elementA.fields.name < elementB.fields.name) ? - orientation : 0;
+                    let pksA = movieA.fields[filter].sort((a, b) => (elements.filter(element => element.pk == a)[0].fields.name >= elements.filter(element => element.pk == b)[0].fields.name) ? 1 : -1);
+                    let pksB = movieB.fields[filter].sort((a, b) => (elements.filter(element => element.pk == a)[0].fields.name >= elements.filter(element => element.pk == b)[0].fields.name) ? 1 : -1);   
+
+                    let nbPkA = pksA.length;
+                    let nbPkB = pksB.length;
+                    let nbPk = ( nbPkA >= nbPkB) ? nbPkA : nbPkB;
+
+                    let order = 0;
+
+                    for (let index = 0 ; index < nbPk; index++)
+                    {
+                        let elementA = elements.filter(element => element.pk == pksA[index])[0];
+                        let elementB = elements.filter(element => element.pk == pksB[index])[0];
+                        
+                        order = (elementA.fields.name > elementB.fields.name) ? orientation : (elementA.fields.name < elementB.fields.name) ? - orientation : 0;
+
+                        if (order != 0)
+                            index = nbPk;
+                    }
+
+                    return order;
                 });
-                
+
                 break;
             case "number":
-                this.state.moviesFiltred = this.state.moviesFiltred.sort(function(a, b){return (a.fields[filter] > b.fields[filter])? orientation : -orientation});
+                this.state.moviesFiltred = this.state.moviesFiltred.sort(function(a, b){return (a.fields[filter] > b.fields[filter]) ? orientation : (a.fields[filter] < b.fields[filter]) ? - orientation : 0;});
                 break;
         }
 

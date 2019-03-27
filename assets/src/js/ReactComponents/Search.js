@@ -24,6 +24,7 @@ class Search extends React.Component {
     }
 
     handleChangeID(event) {
+        console.log(window.location.href);
         this.setState({id: event.target.value});
     }
 
@@ -56,11 +57,11 @@ class Search extends React.Component {
 
                                 <div className="control is-expanded">
                                     <input className="input" type="text" value={this.state.title}
-                                           onChange={this.handleChange} placeholder="Titre"/>
+                                           onChange={this.handleChange} placeholder="Title*" required/>
                                 </div>
                                 <div className="control">
-                                    <input className="input" type="text" value={this.state.year}
-                                           onChange={this.handleChangeYear} placeholder="Année"/>
+                                    <input className="input" type="number" value={this.state.year}
+                                           onChange={this.handleChangeYear} placeholder="Year"/>
                                 </div>
                                 <div className="control">
                                     <button type="submit" className="button is-info">

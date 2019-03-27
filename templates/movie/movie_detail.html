@@ -45,9 +45,12 @@
                             {{ rating.Value }}
                         </li>
                     {% endfor %}
-                    <li>
-                        <span class="has-text-weight-bold">MovieList : </span> 5
-                    </li>
+                    {% if movielistrating is not None %}
+                        <li>
+                            <span class="has-text-weight-bold">MovieList : </span>
+                            {{ movielistrating }}/10
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
