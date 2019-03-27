@@ -13,6 +13,7 @@ from django.core import serializers
 from django.contrib.auth.decorators import login_required
 import json, urllib
 import requests, datetime
+from django.db.models import Avg
 
 from .models import Movie, ListMovie, Genre, State, Country, Type, Person
 
@@ -22,6 +23,7 @@ def movie_detail(request, movie_pk):
 
     context['movie'] = Movie.objects.select_related('type', 'director').get(pk=movie_pk)
     context['states'] = serializers.serialize('json', State.objects.all())
+    context['movielistrating'] = ListMovie.objects.filter(movie__pk=movie_pk).aggregate(Avg('note'))['note__avg']
 
     if request.user.is_authenticated:
         try:
@@ -188,10 +190,11 @@ def add_json_db(movie):
 
         try:
             movie_selected = Movie.objects.create(imdbID=movie['imdbID'], name=movie['Title'],
-                                                  year=movie['Year'], released=format_date(movie['Released']),
+                                                  year=format_year(movie['Year']),
+                                                  released=format_date(movie['Released']),
                                                   runtime=movie['Runtime'], poster_link=movie['Poster'],
                                                   ratings=ratings, plot=movie['Plot'],
-                                                  awards=movie['Awards'], dvd=format_date(movie['DVD']),
+                                                  awards=movie['Awards'], dvd=format_date(dvd),
                                                   director=director,
                                                   type=type_movie)
         except IntegrityError as e:
