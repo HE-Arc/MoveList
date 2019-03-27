@@ -22,7 +22,7 @@ def movie_detail(request, movie_pk):
     context = {}
 
     context['movie'] = Movie.objects.select_related('type', 'director').get(pk=movie_pk)
-    context['states'] = serializers.serialize('json', State.objects.all())
+    context['states'] = serializers.serialize('json', jects.all())
     context['movielistrating'] = ListMovie.objects.filter(movie__pk=movie_pk).aggregate(Avg('note'))['note__avg']
 
     if request.user.is_authenticated:
@@ -117,9 +117,11 @@ def display_list(user, request):
 
             usermovies = ListMovie.objects.select_related('movie').filter(user=user.pk)
 
+            states = State.objects.all()
+
             data['usermovies'] = serializers.serialize('json', usermovies)
             data['movies'] = serializers.serialize('json', list(map(lambda element: element.movie, usermovies)))
-            data['states'] = serializers.serialize('json', list(map(lambda element: element.state, usermovies)))
+            data['states'] = serializers.serialize('json', list(states))
             data['types'] = serializers.serialize('json', list(Type.objects.all()))
             data['genres'] = serializers.serialize('json', list(Genre.objects.all()))
             data['people'] = serializers.serialize('json', list(Person.objects.all()))
@@ -127,7 +129,6 @@ def display_list(user, request):
             data['user_id'] = user.pk
 
             context['data'] = data
-            print(data)
         except ObjectDoesNotExist:
             context['data'] = None
     return render(request, 'my_list.html', context)
@@ -150,6 +151,8 @@ class search(View):
         id = None
         year = None
         title = None
+        key = 'f625944d'
+
         try:
             title = request.GET['title']
             try:
@@ -164,17 +167,17 @@ class search(View):
 
         if title is not None:
             m = Movie.objects.filter(
-                name__unaccent__trigram_similar=title).first() if year is None else Movie.objects.filter(name=title,
-                                                                                                         year=year).first()
+                name__search=title).all() if year is None else Movie.objects.filter(name=title,
+                                                                                                         year=year).all()
         else:
             m = Movie.objects.filter(imdbID=id).first()
 
-        if m is None:
+        if m is None or len(m) == 0:
             if title is not None:
-                api_request = f'http://www.omdbapi.com/?t={title}&apikey=f625944d' if year is None \
-                    else f'http://www.omdbapi.com/?t={title}&y={year}&apikey=f625944d'
+                api_request = f'http://www.omdbapi.com/?t={title}&apikey={key}' if year is None \
+                    else f'http://www.omdbapi.com/?t={title}&y={year}&apikey={key}'
             else:
-                api_request = f'http://www.omdbapi.com/?i={id}&apikey=f625944d'
+                api_request = f'http://www.omdbapi.com/?i={id}&apikey={key}'
             r = requests.get(api_request)
             f = r.json()
             if is_in_api(f):
@@ -187,7 +190,16 @@ class search(View):
                     url = reverse('index')
                 return HttpResponseRedirect(url + "?error=1")
         else:
-            return redirect('movie_detail', movie_pk=m.id)
+            if type(m) == Movie:
+                return redirect('movie_detail', movie_pk=m.id)
+            else:
+                if len(m) == 1:
+                    return redirect('movie_detail', movie_pk=m[0].id)
+
+                print(m)
+                context = {}
+                context['movies'] = m
+                return render(request, 'multiple_result_search.html', context)
 
 
 def add_json_db(movie):
