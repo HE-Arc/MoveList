@@ -23,8 +23,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('APP_KEY', '0=yc1qj+-hvu+v753s9wak2x3ohl@km!x5cw6b8*5a-o#xr+^-')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
-DEBUG = True
+DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
+# DEBUG = True
 
 ALLOWED_HOSTS = ['movielist.srvz-webapp.he-arc.ch', 'localhost', '127.0.0.1', '[::1]']
 # ALLOWED_HOSTS = []
@@ -80,7 +80,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
 )
 
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 WEBPACK_LOADER = {
     'DEFAULT': {
@@ -135,7 +135,7 @@ DATABASES = {
         'NAME': os.getenv('GROUPNAME', 'movielist'),
         'USER': os.getenv('GROUPNAME', 'movielist'),
         'PASSWORD': os.getenv('PASSWORD', '1234'),
-        'HOST': os.getenv('PSQL_HOST', 'localhost'),
-        'PORT': os.getenv('PSQL_PORT', 5432),
+        'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
+        'PORT': os.getenv('POSTGRES_HOST', 5432),
     }
 }
