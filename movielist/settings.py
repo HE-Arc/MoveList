@@ -136,6 +136,6 @@ DATABASES = {
         'USER': os.getenv('GROUPNAME', 'movielist'),
         'PASSWORD': os.getenv('PASSWORD', '1234'),
         'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
-        'PORT': os.getenv('POSTGRES_HOST', 5432),
+        'PORT': os.getenv('POSTGRES_PORT', 5432),
     }
 }

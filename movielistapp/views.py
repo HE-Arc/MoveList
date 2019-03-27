@@ -37,21 +37,29 @@ def movie_detail(request, movie_pk):
 
     return render(request, 'movie/movie_detail.html', context)
 
-
+@login_required
 def add_movie_to_list(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
     current_user = request.user
-
     data = json.loads(request.body)
+    rating = None
+    state = None
+
+    if data['rating'] != '':
+        rating = data['rating']
+
+    if data['state'] != '':
+        state = State.objects.get(pk=data['state'])
 
     try:
-        list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=State.objects.get(pk=data['state']),
-                                              note=data['rating'])
+        list_movie = ListMovie.objects.create(user=current_user, movie=movie, state=state,
+                                              note=rating)
         return JsonResponse({'listId': list_movie.pk}, status=200)
     except IntegrityError as e:
         return HttpResponseBadRequest()
 
 
+@login_required
 def edit_movie_in_list(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
     current_user = request.user
@@ -65,7 +73,7 @@ def edit_movie_in_list(request, movie_pk):
     except IntegrityError as e:
         return HttpResponseBadRequest()
 
-
+@login_required
 def remove_movie_from_list(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
     current_user = request.user
