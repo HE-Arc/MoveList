@@ -19,14 +19,25 @@ export default class ListMovie extends React.Component {
       return listGenres.join(', ');
     }
 
-    getNote(movie)
+    getViewing(movie)
     {
+        let viewingMovie = this.props.usermovies.filter(usermovie => usermovie.fields.movie == movie.pk)[0];
         let tileNote = [];
-        if (this.props.usermovies.filter(usermovie => usermovie.fields.movie == movie.pk)[0].fields.note != null) {
+
+        let state = this.props.data.states.filter(states => states.pk == viewingMovie.fields.state)[0];
+
+        tileNote.push(
+            <div className="tile is-child">
+                <div className="has-text-weight-bold tag is-warning">State</div>
+                <span> { state.fields.name }</span>
+            </div>
+        );
+
+        if ( viewingMovie.fields.note != null) {
             tileNote.push(
                 <div className="tile is-child">
-                    <span className="has-text-weight-bold">Note </span>
-                    <span>{ movie.fields.note }</span>
+                    <div className="has-text-weight-bold tag is-warning">My note</div>
+                    <span> { viewingMovie.fields.note } / 10</span>
                 </div>
             );
         }
@@ -39,27 +50,28 @@ export default class ListMovie extends React.Component {
         if (this.state.movies !== null && this.state.movies !== undefined)
         {
             this.state.movies.forEach(movie => {
+                let keyMovie = "movie" + movie.pk;
                 listThumbails.push(
-                    <a className="tile box is-parent is-vertical" href={'/movie/' + movie.pk} key={ movie.pk }>
+                    <a className="tile box is-parent is-vertical" href={'/movie/' + movie.pk} key={ keyMovie }>
+                        <div className="tile is-child is-12 has-text-centered">
+                            <h1 className="subtitle has-text-weight-bold">{ movie.fields.name }</h1>
+                        </div>
                         <div className="tile is-child">
                             <div className="tile">
-                                <div className="tile is-2 has-text-centered is-vcentered column">
-                                    <figure className="container image is-128x128">
+                                <div className="tile is-2 has-text-centered  is-vcentered column">
+                                    <figure className="container image list-thumbnails">
                                         <img src={ movie.fields.poster_link } alt={ movie.fields.name } />
                                     </figure>
                                 </div>
                                 <div className="tile is-10 is-vertical is-parent">
-                                    <div className="tile is-child is-12 has-text-centered">
-                                        <h1 className="subtitle has-text-weight-bold">{ movie.fields.name }</h1>
-                                    </div>
                                     <div className="tile is-child">
-                                        <span className="has-text-weight-bold">Genre </span>
-                                        <span>{this.createListGenres(movie.fields.genres)}</span>
+                                        <span className="has-text-weight-bold tag is-warning">Genre</span>
+                                        <span> {this.createListGenres(movie.fields.genres)}</span>
                                     </div>
-                                    {this.getNote(movie)}
+                                    {this.getViewing(movie)}
                                     <div className="tile is-child">
-                                        <h2 className="has-text-weight-bold">Plot</h2>
-                                        <span>{ movie.fields.plot }</span>
+                                        <span className="has-text-weight-bold tag is-warning">Plot</span>
+                                        <span> { movie.fields.plot }</span>
                                     </div>
                                 </div>
                             </div>

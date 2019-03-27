@@ -12,10 +12,10 @@ export default class MainComponent extends React.Component {
             usermovies : JSON.parse(props.usermovies),
             moviesFiltred : JSON.parse(props.movies),
             movies : JSON.parse(props.movies),
-            states : JSON.parse(props.states),
-            types : JSON.parse(props.types),
-            genres : JSON.parse(props.genres),
-            people : JSON.parse(props.people),
+            states : JSON.parse(props.states).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
+            types : JSON.parse(props.types).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
+            genres : JSON.parse(props.genres).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
+            people : JSON.parse(props.people).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
             user : {name: props.user, id: props.user_id}
         }
 
@@ -68,10 +68,25 @@ export default class MainComponent extends React.Component {
 
         switch (type) {
             case "state":
-                this.state.moviesFiltred = this.state.moviesFiltred.sort(function(a, b){return (usermovies.filter(usermovie => usermovie.fields.movie == a.pk)[0].fields[filter] > usermovies.filter(usermovie => usermovie.fields.movie == b.pk)[0].fields[filter])? orientation : -orientation});
+                let states = this.state.states;
+                this.state.moviesFiltred = this.state.moviesFiltred.sort(function(movieA, movieB) {
+ 
+                    let elementA = states.filter(element => element.pk == usermovies.filter(usermovie => usermovie.fields.movie == movieA.pk)[0].fields[filter])[0];
+                    let elementB = states.filter(element => element.pk == usermovies.filter(usermovie => usermovie.fields.movie == movieB.pk)[0].fields[filter])[0];
+                    
+                    return (elementA.fields.name > elementB.fields.name) ? orientation : (elementA.fields.name < elementB.fields.name) ? - orientation : 0;
+                });
+
                 break;
             case "list":
-                this.state.moviesFiltred = this.state.moviesFiltred.sort(function(a, b){return (a.fields[filter].sort()[0] > b.fields[filter].sort()[0])? orientation : -orientation});
+                let elements = this.state[filter];
+                this.state.moviesFiltred = this.state.moviesFiltred.sort(function(movieA, movieB){
+                    let elementA = elements.filter(element => element.pk = usermovies.filter(usermovie => usermovie.fields.movie == movieA.pk)[0].fields[filter].sort((a, b) => (a.name > b.name) ? orientation : -orientation))[0];
+                    let elementB = elements.filter(element => element.pk = usermovies.filter(usermovie => usermovie.fields.movie == movieB.pk)[0].fields[filter].sort((a, b) => (a.name > b.name) ? orientation : -orientation))[0];
+
+                    return (elementA.fields.name > elementB.fields.name) ? orientation : (elementA.fields.name < elementB.fields.name) ? - orientation : 0;
+                });
+                
                 break;
             case "number":
                 this.state.moviesFiltred = this.state.moviesFiltred.sort(function(a, b){return (a.fields[filter] > b.fields[filter])? orientation : -orientation});
