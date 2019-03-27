@@ -3,19 +3,19 @@
 {% block title %}My List{% endblock %}
 
 {% block content %}
-  <div id="MainComponent" class="react-component"
-      {% for key, value in data.items %}
-          data-{{key}}="{{ value }}"
-      {% endfor %}
-  ></div>
+    {% if error %}
+        <div class="section">
+            <div class="container">
+                <div class="notification is-black">
+                    Sorry, Movie not found !!
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div id="MainComponent" class="react-component"
+            {% for key, value in data.items %}
+         data-{{ key }}="{{ value }}"
+            {% endfor %}
+    ></div>
 
-  {% if error %}
-      <div class="section">
-          <div class="container">
-              <div class="notification is-black">
-                  Sorry, Movie not found !!
-              </div>
-          </div>
-      </div>
-  {% endif %}
 {% endblock %}

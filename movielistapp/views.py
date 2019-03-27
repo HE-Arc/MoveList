@@ -164,7 +164,7 @@ class search(View):
                 m = add_json_db(f)
                 return redirect('movie_detail', movie_pk=m.id)
             else:
-                url = reverse('display_user_list', kwargs={'user_pk': request.user.id})
+                url = reverse('my_list')
                 return HttpResponseRedirect(url + "?error=1")
         else:
             return redirect('movie_detail', movie_pk=m.id)
