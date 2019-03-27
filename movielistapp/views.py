@@ -4,7 +4,6 @@ from django.views import generic, View
 from django.db import models
 from django.db import IntegrityError
 from django.db.models.functions import Lower
-from .models import Movie, Person, Genre, Country, Type
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse, HttpResponseRedirect
@@ -119,8 +118,14 @@ def display_list(user, request):
 
             states = State.objects.all()
 
+            def get_movie_from_list_entry(list_entry):
+                list_entry.movie.ratings = list_entry.note
+                return list_entry.movie
+
+            movies = list(map(get_movie_from_list_entry, usermovies))
+
             data['usermovies'] = serializers.serialize('json', usermovies)
-            data['movies'] = serializers.serialize('json', list(map(lambda element: element.movie, usermovies)))
+            data['movies'] = serializers.serialize('json', movies)
             data['states'] = serializers.serialize('json', list(states))
             data['types'] = serializers.serialize('json', list(Type.objects.all()))
             data['genres'] = serializers.serialize('json', list(Genre.objects.all()))
