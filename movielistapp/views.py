@@ -107,7 +107,7 @@ def display_list(user, request):
 
             data['usermovies'] = serializers.serialize('json', usermovies)
             data['movies'] = serializers.serialize('json', list(map(lambda element: element.movie, usermovies)))
-            data['states'] = serializers.serialize('json', list(map(lambda element: element.state, usermovies)))
+            data['states'] = serializers.serialize('json', list(State.objects.all()))
             data['types'] = serializers.serialize('json', list(Type.objects.all()))
             data['genres'] = serializers.serialize('json', list(Genre.objects.all()))
             data['people'] = serializers.serialize('json', list(Person.objects.all()))

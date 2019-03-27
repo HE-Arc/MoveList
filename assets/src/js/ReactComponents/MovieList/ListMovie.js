@@ -1,5 +1,6 @@
 import React from 'react';
 import CopyListUrl from './CopyListUrl.js';
+import ReactPaginate from 'react-paginate';
 
 export default class ListMovie extends React.Component {
     constructor(props)
@@ -17,16 +18,29 @@ export default class ListMovie extends React.Component {
 
       return listGenres.join(', ');
     }
+
+    getNote(movie)
+    {
+        let tileNote = [];
+        if (this.props.usermovies.filter(usermovie => usermovie.fields.movie == movie.pk)[0].fields.note != null) {
+            tileNote.push(
+                <div className="tile is-child">
+                    <span className="has-text-weight-bold">Note </span>
+                    <span>{ movie.fields.note }</span>
+                </div>
+            );
+        }
+
+        return tileNote;
+    }
     createThumbnails() {
         let listThumbails = [];
+        
         if (this.state.movies !== null && this.state.movies !== undefined)
         {
             this.state.movies.forEach(movie => {
                 listThumbails.push(
-                    <div className="tile box is-parent is-vertical" key={ movie.pk }>
-                        <div className="tile is-child is-12 has-text-centered">
-                            <h1 className="subtitle has-text-weight-bold"><a className="has-text-black" href={'/movie/' + movie.pk}>{ movie.fields.name }</a></h1>
-                        </div>
+                    <a className="tile box is-parent is-vertical" href={'/movie/' + movie.pk} key={ movie.pk }>
                         <div className="tile is-child">
                             <div className="tile">
                                 <div className="tile is-2 has-text-centered is-vcentered column">
@@ -35,14 +49,14 @@ export default class ListMovie extends React.Component {
                                     </figure>
                                 </div>
                                 <div className="tile is-10 is-vertical is-parent">
+                                    <div className="tile is-child is-12 has-text-centered">
+                                        <h1 className="subtitle has-text-weight-bold">{ movie.fields.name }</h1>
+                                    </div>
                                     <div className="tile is-child">
                                         <span className="has-text-weight-bold">Genre </span>
                                         <span>{this.createListGenres(movie.fields.genres)}</span>
                                     </div>
-                                    <div className="tile is-child">
-                                        <span className="has-text-weight-bold">Note </span>
-                                        <span>{ movie.fields.note }</span>
-                                    </div>
+                                    {this.getNote(movie)}
                                     <div className="tile is-child">
                                         <h2 className="has-text-weight-bold">Plot</h2>
                                         <span>{ movie.fields.plot }</span>
@@ -50,7 +64,7 @@ export default class ListMovie extends React.Component {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 );
             });
 

@@ -43,9 +43,6 @@ export default class MainComponent extends React.Component {
                     case "number":
                         this.state.moviesFiltred = this.state.movies.filter(movie => this.state.moviesFiltred.filter(movieFiltred => movieFiltred.pk == movie.pk).length > 0 || movie.fields[filter] == parseInt(value));
                         break;
-                    case "string":
-                        this.state.moviesFiltred = this.state.movies.filter(movie => this.state.moviesFiltred.filter(movieFiltred => movieFiltred.pk == movie.pk).length > 0 || movie.fields[filter] == value);
-                        break;
                 }
             } else {
                 switch (type) {
@@ -57,9 +54,6 @@ export default class MainComponent extends React.Component {
                         break;
                     case "number":
                         this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => movie.fields[filter] != parseInt(value));
-                        break;
-                    case "string":
-                        this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => movie.fields[filter] != value);
                         break;
                 }
             }
@@ -97,7 +91,7 @@ export default class MainComponent extends React.Component {
             <div>
                 <Search />
                 <Filters onChange={this.handleFiltersChange}  onClick={this.handleFiltersSort} data={ this.state } />
-                <ListMovie  ref={this.listMovie} movies={ this.state.moviesFiltred } data={ this.state } />
+                <ListMovie  ref={this.listMovie} movies={ this.state.moviesFiltred } usermovies={ this.state.usermovies } data={ this.state } />
             </div>
         );
     }

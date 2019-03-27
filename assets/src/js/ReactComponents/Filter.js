@@ -64,9 +64,9 @@ export default class Filter extends React.Component {
                                 <div className="dropdown-content">
                                     { this.props.filters.map((filter) => {
                                         let filterName = this.props.name + filter.pk;
-                                        let keyItem = "filterItem" + filter.pk;
-                                        let keyInput = "filterInput" + filter.pk;
-                                        let keyLabel = "filterLabel" + filter.pk;
+                                        let keyItem = "filterItem" + filterName;
+                                        let keyInput = "filterInput" + filterName;
+                                        let keyLabel = "filterLabel" + filterName;
                                         let filterClass = "is-checkradio checkbox" + this.props.name;
                                         return <div className="dropdown-item"  key={keyItem}>
                                                 <input className={filterClass} id={filterName} value={filter.pk} onChange={this.handleFilterChange} key={keyInput} type="checkbox" name={filter.fields.name} />
