@@ -22,7 +22,7 @@ def movie_detail(request, movie_pk):
     context = {}
 
     context['movie'] = Movie.objects.select_related('type', 'director').get(pk=movie_pk)
-    context['states'] = serializers.serialize('json', jects.all())
+    context['states'] = serializers.serialize('json', State.objects.all())
     context['movielistrating'] = ListMovie.objects.filter(movie__pk=movie_pk).aggregate(Avg('note'))['note__avg']
 
     if request.user.is_authenticated:
