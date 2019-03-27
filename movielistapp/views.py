@@ -37,6 +37,7 @@ def movie_detail(request, movie_pk):
 
     return render(request, 'movie/movie_detail.html', context)
 
+
 @login_required
 def add_movie_to_list(request, movie_pk):
     movie = Movie.objects.get(pk=movie_pk)
@@ -72,6 +73,7 @@ def edit_movie_in_list(request, movie_pk):
         return JsonResponse({'listId': movie_pk}, status=200)
     except IntegrityError as e:
         return HttpResponseBadRequest()
+
 
 @login_required
 def remove_movie_from_list(request, movie_pk):
@@ -133,6 +135,13 @@ def display_list(user, request):
 
 def index(request):
     context = {}
+    context['error'] = False
+    try:
+        error = request.GET['error']
+        if error is not None and error == '1':
+            context['error'] = True
+    except:
+        pass
     return render(request, 'index.html', context)
 
 
@@ -172,7 +181,10 @@ class search(View):
                 m = add_json_db(f)
                 return redirect('movie_detail', movie_pk=m.id)
             else:
-                url = reverse('my_list')
+                if request.user.is_authenticated:
+                    url = reverse('my_list')
+                else:
+                    url = reverse('index')
                 return HttpResponseRedirect(url + "?error=1")
         else:
             return redirect('movie_detail', movie_pk=m.id)
