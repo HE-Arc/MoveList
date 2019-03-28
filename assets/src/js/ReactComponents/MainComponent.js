@@ -8,15 +8,29 @@ export default class MainComponent extends React.Component {
     {
         super(props);
 
+        // multiple parse for the same props is to make different list
+
+        let movies = JSON.parse(props.movies);
         this.state = {
             usermovies : JSON.parse(props.usermovies),
             moviesFiltred : JSON.parse(props.movies),
             movies : JSON.parse(props.movies),
-            states : JSON.parse(props.states).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
-            types : JSON.parse(props.types).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
+            state : JSON.parse(props.states).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
+            type : JSON.parse(props.types).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
             genres : JSON.parse(props.genres).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
-            people : JSON.parse(props.people).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
-            user : {name: props.user, id: props.user_id}
+            director : JSON.parse(props.people).filter( person => movies.filter(movie => movie.fields.director == person.pk).length > 0).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
+            scenarists : JSON.parse(props.people).filter( person => movies.filter(movie => movie.fields.scenarists.includes(person.pk)).length > 0).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
+            actors : JSON.parse(props.people).filter( person => movies.filter(movie => movie.fields.actors.includes(person.pk)).length > 0).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
+            user : {name: props.user, id: props.user_id},
+            nbFilter : 0,
+            filters : { // storage filter
+                state : [],
+                type : [],
+                genres : [],
+                director : [],
+                scenarists : [],
+                actors : []
+            }
         }
 
         this.handleFiltersChange = this.handleFiltersChange.bind(this);
@@ -24,97 +38,116 @@ export default class MainComponent extends React.Component {
         this.listMovie = React.createRef();
     }
 
-    handleFiltersChange(filter, value, checked, type, nbChecked, previousNbChecked) {
-        if (nbChecked == 0) {
-            this.state.moviesFiltred = JSON.parse(JSON.stringify(this.state.movies)); // depth copy
-        } else {
-            if (nbChecked == 1 && previousNbChecked == 0) {
-                this.state.moviesFiltred.splice(0, this.state.moviesFiltred.length);
-            }
+    /**
+     * filters list movie
+     * @param {*} filter 
+     * @param {*} value 
+     */
+    handleFiltersChange(filter, value) {
 
-            if (checked) {
-                switch (type) {
-                    case "state":
-                        this.state.moviesFiltred = this.state.movies.filter( movie => this.state.moviesFiltred.filter(movieFiltred => movieFiltred.pk == movie.pk).length > 0 || (this.state.moviesFiltred.indexOf(movie) < 0 && this.state.usermovies.filter(usermovie => usermovie.fields.movie == movie.pk)[0].fields[filter] == parseInt(value)));
-                        break;
-                    case "list":
-                        this.state.moviesFiltred = this.state.movies.filter(movie => this.state.moviesFiltred.filter(movieFiltred => movieFiltred.pk == movie.pk).length > 0 || movie.fields[filter].indexOf(parseInt(value)) >= 0);
-                        break;
-                    case "number":
-                        this.state.moviesFiltred = this.state.movies.filter(movie => this.state.moviesFiltred.filter(movieFiltred => movieFiltred.pk == movie.pk).length > 0 || movie.fields[filter] == parseInt(value));
-                        break;
-                }
-            } else {
-                switch (type) {
-                    case "state":
-                    this.state.moviesFiltred = this.state.moviesFiltred.filter( movie => this.state.usermovies.filter(usermovie => usermovie.fields.movie == movie.pk)[0].fields[filter] != parseInt(value));
-                        break;
-                    case "list":
-                        this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => movie.fields[filter].indexOf(parseInt(value)) < 0);
-                        break;
-                    case "number":
-                        this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => movie.fields[filter] != parseInt(value));
-                        break;
-                }
-            }
-        }
+        console.log(filter);
+        // update storage filter
+        value = parseInt(value);
+        if (this.state.filters[filter].includes(value))
+            this.state.filters[filter].splice(this.state.filters[filter].indexOf(value), 1);
+        else
+            this.state.filters[filter].push(value);
+
+        // Reload list movie
+        this.state.moviesFiltred = JSON.parse(JSON.stringify(this.state.movies)); // depth copy
+
+        let filters = this.state.filters;
+        let usermovies = this.state.usermovies;
+
+        // filters
+        if (filters.state.length > 0)
+            this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => filters.state.includes(usermovies.filter(usermovie => usermovie.fields.movie == movie.pk)[0].fields.state));
         
+        if (filters.type.length > 0)
+            this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => filters.type.includes(movie.fields.type));
+        
+        if (filters.genres.length > 0)
+            this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => movie.fields.genres.filter(genre => filters.genres.includes(genre)) > 0);
+
+        if (filters.director.length > 0)
+            this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => filters.director.includes(movie.fields.director));
+
+        if (filters.scenarists.length > 0)
+            this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => movie.fields.scenarists.filter(scenarist => filters.scenarists.includes(scenarist)) > 0);
+
+        if (filters.actors.length > 0)
+            this.state.moviesFiltred = this.state.moviesFiltred.filter(movie => movie.fields.actors.filter(actor => filters.actors.includes(actor)) > 0);
+
         this.updateListMovies();
     }
 
+    /**
+     * sort list movie
+     * @param {*} filter 
+     * @param {*} value 
+     * @param {*} type 
+     */
     handleFiltersSort(filter, value, type) {
+
         let orientation = (value == "ASC") ? 1 : -1;
+
         let usermovies = this.state.usermovies;
-        
+        let elements = this.state[filter];
+
         switch (type) {
+            // Specific because the data is not stocked in the model Movie but ListMovie
             case "state":
-                let states = this.state.states;
                 this.state.moviesFiltred = this.state.moviesFiltred.sort(function(movieA, movieB) {
- 
-                    let elementA = states.filter(element => element.pk == usermovies.filter(usermovie => usermovie.fields.movie == movieA.pk)[0].fields[filter])[0];
-                    let elementB = states.filter(element => element.pk == usermovies.filter(usermovie => usermovie.fields.movie == movieB.pk)[0].fields[filter])[0];
+                    console.log(elements);
+                    let elementA = elements.filter(element => element.pk == usermovies.filter(usermovie => usermovie.fields.movie == movieA.pk)[0].fields[filter])[0];
+                    let elementB = elements.filter(element => element.pk == usermovies.filter(usermovie => usermovie.fields.movie == movieB.pk)[0].fields[filter])[0];
                     
                     return (elementA.fields.name > elementB.fields.name) ? orientation : (elementA.fields.name < elementB.fields.name) ? - orientation : 0;
                 });
                 break;
 
+            // For foreign key OneToMany
             case "list":
-                let listElements = (filter == "director" || filter == "scenarists" || filter == "actors") ? this.state["people"] : this.state[filter];
                 this.state.moviesFiltred = this.state.moviesFiltred.sort(function(movieA, movieB) {
 
-                    let pksA = movieA.fields[filter].sort((a, b) => (listElements.filter(element => element.pk == a)[0].fields.name >= listElements.filter(element => element.pk == b)[0].fields.name) ? 1 : -1);
-                    let pksB = movieB.fields[filter].sort((a, b) => (listElements.filter(element => element.pk == a)[0].fields.name >= listElements.filter(element => element.pk == b)[0].fields.name) ? 1 : -1);   
+                    // Retrieve all keys sorted for each element
+                    let pksA = movieA.fields[filter].sort((a, b) => (elements.filter(element => element.pk == a)[0].fields.name >= elements.filter(element => element.pk == b)[0].fields.name) ? 1 : -1);
+                    let pksB = movieB.fields[filter].sort((a, b) => (elements.filter(element => element.pk == a)[0].fields.name >= elements.filter(element => element.pk == b)[0].fields.name) ? 1 : -1);   
 
+                    // Sort elements by multiple key
                     let nbPkA = pksA.length;
                     let nbPkB = pksB.length;
-                    let nbPk = ( nbPkA >= nbPkB) ? nbPkA : nbPkB;
+                    let nbPk = ( nbPkA <= nbPkB) ? nbPkA : nbPkB;
 
                     let order = 0;
 
                     for (let index = 0 ; index < nbPk; index++)
                     {
-                        let elementA = listElements.filter(element => element.pk == pksA[index])[0];
-                        let elementB = listElements.filter(element => element.pk == pksB[index])[0];
-                        
+                        let elementA = elements.filter(element => element.pk == pksA[index])[0];
+                        let elementB = elements.filter(element => element.pk == pksB[index])[0];
+
                         order = (elementA.fields.name > elementB.fields.name) ? orientation : (elementA.fields.name < elementB.fields.name) ? - orientation : 0;
 
                         if (order != 0)
                             index = nbPk;
                     }
 
-                    return order;
+                    // Less keys first
+                    return (order == 0) ? (nbPkA >= nbPkB) ? orientation : -orientation : order;
                 });
 
                 break;
 
+            // Foreign key OneToOne
             case "number":
-                let valueElements = (filter == "director" || filter == "scenarists" || filter == "actors") ? this.state["people"] : this.state[filter];
-
+                // Specific to sort people
+                
+                console.log(filter);
                 this.state.moviesFiltred = this.state.moviesFiltred.sort(function(movieA, movieB) {
-                    
-                    let elementA = valueElements.filter(element => element.pk == movieA.fields[filter])[0];
-                    let elementB = valueElements.filter(element => element.pk == movieB.fields[filter])[0];
-                    
+   
+                    let elementA = elements.filter(element => element.pk == movieA.fields[filter])[0];
+                    let elementB = elements.filter(element => element.pk == movieB.fields[filter])[0];
+
                     return(elementA.fields.name > elementB.fields.name) ? orientation : (elementA.fields.name < elementB.fields.name) ? - orientation : 0;
                 });
 
@@ -124,6 +157,7 @@ export default class MainComponent extends React.Component {
         this.updateListMovies();
     }
 
+    // Update the child component listMovie
     updateListMovies() {
         this.listMovie.current.state.movies = this.state.moviesFiltred;
         this.listMovie.current.forceUpdate();
@@ -134,7 +168,7 @@ export default class MainComponent extends React.Component {
             <div>
                 <Search />
                 <Filters onChange={this.handleFiltersChange}  onClick={this.handleFiltersSort} data={ this.state } />
-                <ListMovie  ref={this.listMovie} movies={ this.state.moviesFiltred } perPage={ 2 } usermovies={ this.state.usermovies } data={ this.state } />
+                <ListMovie  ref={this.listMovie} movies={ this.state.moviesFiltred } usermovies={ this.state.usermovies } data={ this.state } />
             </div>
         );
     }

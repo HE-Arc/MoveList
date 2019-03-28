@@ -7,34 +7,33 @@ export default class Filter extends React.Component {
       this.state = {
           name : "filter-" + props.name,
           filterClass : "checkbox" + this.props.name,
-          nbChecked : 0
       }
       
       this.handleFilterChange = this.handleFilterChange.bind(this);
       this.handleFilterSort = this.handleFilterSort.bind(this);
     }
 
-    toggleActivation(e) {
-        var node = document.getElementById(e.currentTarget.value);
+    /**
+     * Open menu edition for the filter
+     * @param {*} menu 
+     */
+    toggleActivation(menu) {
+        var node = document.getElementById(menu.currentTarget.value);
         node.classList.toggle('is-active');
     }
 
+    /**
+     * Event to filter the movie list
+     * @param {*} checkbox 
+     */
     handleFilterChange(checkbox) {
-        let previousNbChecked = this.state.nbChecked;
-        
-        let checkboxes = document.getElementsByClassName(this.state.filterClass);
-
-        let nbChecked = 0;
-        Array.prototype.forEach.call(checkboxes, function(chkbox) {
-            if (chkbox.checked == true) {
-                nbChecked++;
-            }
-        });
-        
-        this.state.nbChecked = nbChecked;
-        this.props.onChange(this.props.id, checkbox.currentTarget.value, checkbox.currentTarget.checked, this.props.type, nbChecked, previousNbChecked);
+        this.props.onChange(this.props.id, checkbox.currentTarget.value);
     }
 
+    /**
+     * Event to sort the movie list
+     * @param {*} button 
+     */
     handleFilterSort(button) {
         this.props.onClick(this.props.id, button.currentTarget.value, this.props.type);
     }
