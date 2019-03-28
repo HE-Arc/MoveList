@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Search result{% endblock %}
+
+{% block content %}
+    <div>
+        {% if error %}
+            <div class="section">
+                <div class="container">
+                    <div class="notification is-black">
+                        Sorry, Movie not found !!
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div id="Search" class="react-component"></div>
+
+        <div class="section filters">
+            <h1 class="title">Resultat de la recherche</h1>
+
+
+            <table class="table is-fullwidth is-hoverable">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Year</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for movie in movies %}
+                  <tr>
+                    <td><a href="{% url 'movie_detail' movie_pk=movie.pk %}">{{ movie.name }}</a></td>
+                    <td>{{ movie.year }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

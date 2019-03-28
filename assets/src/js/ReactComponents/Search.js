@@ -24,6 +24,7 @@ class Search extends React.Component {
     }
 
     handleChangeID(event) {
+        console.log(window.location.href);
         this.setState({id: event.target.value});
     }
 

@@ -2,6 +2,7 @@ from django.db import models
 from movielistapp.listmodels.movie import Movie
 from movielistapp.listmodels.state import State
 from django.contrib.auth.models import User
+from django.core import serializers
 
 
 class ListMovie(models.Model):

@@ -41,7 +41,7 @@ export default class ListMovie extends React.Component {
                                     </div>
                                     <div className="tile is-child">
                                         <span className="has-text-weight-bold">Note </span>
-                                        <span>{ movie.fields.note }</span>
+                                          <span>{ movie.fields.ratings }</span>
                                     </div>
                                     <div className="tile is-child">
                                         <h2 className="has-text-weight-bold">Plot</h2>
