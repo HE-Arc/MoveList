@@ -48,7 +48,6 @@
   "dependencies": {
     "bulma": "^0.7.4",
     "react": "^16.8.1",
-    "react-dom": "^16.8.1",
-    "react-paginate": "^6.3.0"
+    "react-dom": "^16.8.1"
   }
 }
