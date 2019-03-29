@@ -13,8 +13,8 @@ export default class MainComponent extends React.Component {
         let movies = JSON.parse(props.movies);
         this.state = {
             usermovies : JSON.parse(props.usermovies),
-            moviesFiltred : JSON.parse(props.movies),
-            movies : JSON.parse(props.movies),
+            moviesFiltred : JSON.parse(props.movies).sort((a,b) => (a.fields.name > b.fields.name) ? 1: -1),
+            movies : JSON.parse(props.movies).sort((a,b) => (a.fields.name > b.fields.name) ? 1: -1),
             state : JSON.parse(props.states).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
             type : JSON.parse(props.types).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
             genres : JSON.parse(props.genres).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
@@ -22,7 +22,7 @@ export default class MainComponent extends React.Component {
             scenarists : JSON.parse(props.people).filter( person => movies.filter(movie => movie.fields.scenarists.includes(person.pk)).length > 0).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
             actors : JSON.parse(props.people).filter( person => movies.filter(movie => movie.fields.actors.includes(person.pk)).length > 0).sort((a, b) => (a.fields.name > b.fields.name) ? 1 : -1),
             user : {name: props.user, id: props.user_id},
-            nbFilter : 0,
+            sortTitleOrientation : 1,
             filters : { // storage filter
                 state : [],
                 type : [],
@@ -35,6 +35,7 @@ export default class MainComponent extends React.Component {
 
         this.handleFiltersChange = this.handleFiltersChange.bind(this);
         this.handleFiltersSort = this.handleFiltersSort.bind(this);
+        this.handleTitlesSort = this.handleTitlesSort.bind(this);
         this.listMovie = React.createRef();
     }
 
@@ -82,12 +83,15 @@ export default class MainComponent extends React.Component {
     }
 
     /**
-     * sort list movie
+     * sort list movie by filter
      * @param {*} filter 
      * @param {*} value 
      * @param {*} type 
      */
     handleFiltersSort(filter, value, type) {
+
+        // Remove sort by title
+        this.state.sortTitleOrientation = 0;
 
         let orientation = (value == "ASC") ? 1 : -1;
 
@@ -157,6 +161,20 @@ export default class MainComponent extends React.Component {
         this.updateListMovies();
     }
 
+    /**
+     * Sort movie list by title
+     */
+    handleTitlesSort() {
+        this.state.sortTitleOrientation = (this.state.sortTitleOrientation == 1) ? -1 : 1;
+        let orientation = this.state.sortTitleOrientation;
+       
+        this.state.moviesFiltred = this.state.moviesFiltred.sort(function(movieA, movieB) {
+            return(movieA.fields.name > movieB.fields.name) ? orientation : (movieA.fields.name < movieB.fields.name) ? - orientation : 0;
+        });
+
+        this.updateListMovies();
+    }
+
     // Update the child component listMovie
     updateListMovies() {
         this.listMovie.current.state.movies = this.state.moviesFiltred;
@@ -168,7 +186,7 @@ export default class MainComponent extends React.Component {
             <div>
                 <Search />
                 <Filters onChange={this.handleFiltersChange}  onClick={this.handleFiltersSort} data={ this.state } />
-                <ListMovie  ref={this.listMovie} movies={ this.state.moviesFiltred } usermovies={ this.state.usermovies } data={ this.state } />
+                <ListMovie onClick={this.handleTitlesSort} ref={this.listMovie} movies={ this.state.moviesFiltred } usermovies={ this.state.usermovies } data={ this.state } />
             </div>
         );
     }

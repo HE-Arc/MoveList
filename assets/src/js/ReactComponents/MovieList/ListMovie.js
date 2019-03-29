@@ -9,6 +9,8 @@ export default class ListMovie extends React.Component {
         this.state = {
             movies: this.props.movies,
         }
+
+        this.handleTitlesSort = this.handleTitlesSort.bind(this);
     }
 
     /**
@@ -103,16 +105,32 @@ export default class ListMovie extends React.Component {
         }
     }
 
+    /**
+     * Propagate to the parent the sort by title
+     */
+    handleTitlesSort() {
+        this.props.onClick();
+    }
+
     render() {
         return (
             <section className="section">
                 <div className="container">
+                    <h1 className="title">List of {this.props.data.user.name}</h1>
                     <div className="tile is-ancestor is-vertical">
-                        <div className="tile is-parent">
+                        <div className="tile is-parent is-vertical">
                             <div className="tile is-child">
                               <div className="columns">
                                 <div className="column is-8">
-                                  <h1 className="title">List of {this.props.data.user.name}</h1>
+                                    <button className="button is-info" onClick={this.handleTitlesSort}>
+                                        <span>Sort by title</span>
+                                        <span className="icon">
+                                            <i className="fas fa-arrow-up"></i>
+                                        </span>
+                                        <span className="icon">
+                                            <i className="fas fa-arrow-down"></i>
+                                        </span>
+                                    </button>
                                 </div>
                                 <div className="column is-4">
                                   <CopyListUrl userId={this.props.data.user.id} />
