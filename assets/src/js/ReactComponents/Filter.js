@@ -7,34 +7,33 @@ export default class Filter extends React.Component {
       this.state = {
           name : "filter-" + props.name,
           filterClass : "checkbox" + this.props.name,
-          nbChecked : 0
       }
       
       this.handleFilterChange = this.handleFilterChange.bind(this);
       this.handleFilterSort = this.handleFilterSort.bind(this);
     }
 
-    toggleActivation(e) {
-        var node = document.getElementById(e.currentTarget.value);
+    /**
+     * Open menu edition for the filter
+     * @param {*} menu 
+     */
+    toggleActivation(menu) {
+        var node = document.getElementById(menu.currentTarget.value);
         node.classList.toggle('is-active');
     }
 
+    /**
+     * Event to filter the movie list
+     * @param {*} checkbox 
+     */
     handleFilterChange(checkbox) {
-        let previousNbChecked = this.state.nbChecked;
-        
-        let checkboxes = document.getElementsByClassName(this.state.filterClass);
-
-        let nbChecked = 0;
-        Array.prototype.forEach.call(checkboxes, function(chkbox) {
-            if (chkbox.checked == true) {
-                nbChecked++;
-            }
-        });
-        
-        this.state.nbChecked = nbChecked;
-        this.props.onChange(this.props.id, checkbox.currentTarget.value, checkbox.currentTarget.checked, this.props.type, nbChecked, previousNbChecked);
+        this.props.onChange(this.props.id, checkbox.currentTarget.value);
     }
 
+    /**
+     * Event to sort the movie list
+     * @param {*} button 
+     */
     handleFilterSort(button) {
         this.props.onClick(this.props.id, button.currentTarget.value, this.props.type);
     }
@@ -64,9 +63,9 @@ export default class Filter extends React.Component {
                                 <div className="dropdown-content">
                                     { this.props.filters.map((filter) => {
                                         let filterName = this.props.name + filter.pk;
-                                        let keyItem = "filterItem" + filter.pk;
-                                        let keyInput = "filterInput" + filter.pk;
-                                        let keyLabel = "filterLabel" + filter.pk;
+                                        let keyItem = "filterItem" + filterName;
+                                        let keyInput = "filterInput" + filterName;
+                                        let keyLabel = "filterLabel" + filterName;
                                         let filterClass = "is-checkradio checkbox" + this.props.name;
                                         return <div className="dropdown-item"  key={keyItem}>
                                                 <input className={filterClass} id={filterName} value={filter.pk} onChange={this.handleFilterChange} key={keyInput} type="checkbox" name={filter.fields.name} />

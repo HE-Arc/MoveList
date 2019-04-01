@@ -115,9 +115,7 @@ def display_list(user, request):
             data = {}
 
             usermovies = ListMovie.objects.select_related('movie').filter(user=user.pk)
-
-            states = State.objects.all()
-
+            
             def get_movie_from_list_entry(list_entry):
                 list_entry.movie.ratings = list_entry.note
                 return list_entry.movie
@@ -125,8 +123,9 @@ def display_list(user, request):
             movies = list(map(get_movie_from_list_entry, usermovies))
 
             data['usermovies'] = serializers.serialize('json', usermovies)
+
             data['movies'] = serializers.serialize('json', movies)
-            data['states'] = serializers.serialize('json', list(states))
+            data['states'] = serializers.serialize('json', list(State.objects.all()))
             data['types'] = serializers.serialize('json', list(Type.objects.all()))
             data['genres'] = serializers.serialize('json', list(Genre.objects.all()))
             data['people'] = serializers.serialize('json', list(Person.objects.all()))

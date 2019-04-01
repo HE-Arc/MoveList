@@ -33,3 +33,10 @@ html {
   padding-bottom: 0;
   padding-top: 0;
 }
+
+$break-small: 760px;
+$break-large: 1200px;
+
+.list-thumbnails {
+  width: 128px;
+}
