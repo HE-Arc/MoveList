@@ -146,11 +146,6 @@ class AddToListButton extends React.Component
     {
       return {"X-CSRFToken": this.props.csrf};
     }
-
-    getTypesForSelect()
-    {
-
-    }
 }
 
 export default AddToListButton;
