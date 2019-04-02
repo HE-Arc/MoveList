@@ -46,7 +46,6 @@ export default class MainComponent extends React.Component {
      */
     handleFiltersChange(filter, value) {
 
-        console.log(filter);
         // update storage filter
         value = parseInt(value);
         if (this.state.filters[filter].includes(value))

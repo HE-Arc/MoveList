@@ -24,7 +24,6 @@ class Search extends React.Component {
     }
 
     handleChangeID(event) {
-        console.log(window.location.href);
         this.setState({id: event.target.value});
     }
 
@@ -53,32 +52,30 @@ class Search extends React.Component {
                     <div className="notification">
                         <h1 className="title">Search a movie</h1>
                         <form onSubmit={this.handleSubmitMovie}>
-                            <div className="field is-grouped">
-
-                                <div className="control is-expanded">
+                            <div className="columns">
+                                <div className="column is-8">
                                     <input className="input" type="text" value={this.state.title}
                                            onChange={this.handleChange} placeholder="Title*" required/>
                                 </div>
-                                <div className="control">
+                                <div className="column is-3">
                                     <input className="input" type="number" value={this.state.year}
                                            onChange={this.handleChangeYear} placeholder="Year"/>
                                 </div>
-                                <div className="control">
+                                <div className="column is-1">
                                     <button type="submit" className="button is-info">
                                         Search
                                     </button>
                                 </div>
-
                             </div>
                         </form>
                         <div className="is-divider" id="search-divider" data-content="OR"></div>
                         <form onSubmit={this.handleSubmitID}>
-                            <div className="field is-grouped">
-                                <div className="control is-expanded">
+                            <div className="columns">
+                                <div className="column is-11">
                                     <input className="input" type="text" value={this.state.id}
                                            onChange={this.handleChangeID} placeholder="ID"/>
                                 </div>
-                                <div className="control">
+                                <div className="column is-1">
                                     <button type="submit" className="button is-info">
                                         Search
                                     </button>
